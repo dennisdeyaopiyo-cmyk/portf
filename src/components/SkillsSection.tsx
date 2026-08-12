@@ -379,20 +379,20 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
             <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-cyan-400 border-2 border-slate-950 shadow-[0_0_12px_#22d3ee]" />
           </div>
 
-          {/* Leaves / Cards Grid Container */}
-          <div className="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-16 md:gap-y-12">
+          {/* Leaves / Cards Staggered Alternating Container */}
+          <div className="space-y-10 md:space-y-14 relative">
             {filteredSkills.map((skill, index) => {
               const IconComponent = getSkillIcon(skill.iconName);
               const levelClass = getLevelColor(skill.level);
-              const isEven = index % 2 === 0; // Even items branch to Left, Odd items branch to Right
+              const isEven = index % 2 === 0; // Even items branch to Left, Odd items branch to Right (and sitting lower)
 
-              // Motion animation variant: sprouting like leaves from the central rod
+              // Slow & smooth motion animation variant: sprouting like leaves from the central rod stem
               const cardVariants = {
                 hidden: {
                   opacity: 0,
-                  scale: 0.25,
-                  x: isEven ? 120 : -120, // Originates from central rod line
-                  rotate: isEven ? -15 : 15, // Leaf opening angle
+                  scale: 0.35,
+                  x: isEven ? 120 : -120, // Sprouting from the central rod stem
+                  rotate: isEven ? -10 : 10, // Organic leaf opening angle
                 },
                 visible: {
                   opacity: 1,
@@ -400,11 +400,8 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
                   x: 0,
                   rotate: 0,
                   transition: {
-                    type: 'spring',
-                    stiffness: 110,
-                    damping: 14,
-                    mass: 0.8,
-                    delay: (index % 3) * 0.08,
+                    duration: 0.85, // Slow & smooth ease as requested
+                    ease: [0.16, 1, 0.3, 1], // Custom smooth cubic-bezier curve
                   },
                 },
               };
@@ -412,7 +409,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
               const mobileVariants = {
                 hidden: {
                   opacity: 0,
-                  scale: 0.3,
+                  scale: 0.35,
                   x: -60, // Originates from left rod
                 },
                 visible: {
@@ -420,9 +417,8 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
                   scale: 1,
                   x: 0,
                   transition: {
-                    type: 'spring',
-                    stiffness: 120,
-                    damping: 15,
+                    duration: 0.75,
+                    ease: [0.16, 1, 0.3, 1],
                   },
                 },
               };
@@ -430,28 +426,33 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
               return (
                 <div 
                   key={skill.id}
-                  className={`relative flex items-center ${
+                  className={`relative flex items-center w-full ${
                     isEven 
-                      ? 'md:justify-end md:pr-10' 
-                      : 'md:justify-start md:pl-10 md:mt-12'
+                      ? 'md:w-1/2 md:mr-auto md:justify-end md:pr-10' 
+                      : 'md:w-1/2 md:ml-auto md:justify-start md:pl-10'
                   } pl-12 md:pl-0`}
                 >
                   
                   {/* CENTRAL ROD BRANCH CONNECTING STEM (Desktop) */}
-                  <div 
-                    className={`hidden md:block absolute top-1/2 -translate-y-1/2 h-0.5 transition-all duration-300 pointer-events-none ${
+                  <motion.div 
+                    initial={{ scaleX: 0, opacity: 0 }}
+                    whileInView={{ scaleX: 1, opacity: 1 }}
+                    viewport={{ once: false, amount: 0.2 }}
+                    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                    style={{ transformOrigin: isEven ? 'right center' : 'left center' }}
+                    className={`hidden md:block absolute top-1/2 -translate-y-1/2 h-0.5 pointer-events-none ${
                       isEven 
-                        ? 'right-0 w-10 bg-gradient-to-l from-cyan-400 to-cyan-500/30' 
-                        : 'left-0 w-10 bg-gradient-to-r from-cyan-400 to-cyan-500/30'
+                        ? 'right-0 w-10 bg-gradient-to-l from-cyan-400 via-cyan-500/50 to-transparent' 
+                        : 'left-0 w-10 bg-gradient-to-r from-cyan-400 via-cyan-500/50 to-transparent'
                     }`}
                   >
                     {/* Glowing Leaf Attachment Node on Central Rod */}
                     <div 
-                      className={`absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-cyan-400 border-2 border-slate-950 shadow-[0_0_10px_#22d3ee] transition-transform duration-300 ${
+                      className={`absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-cyan-400 border-2 border-slate-950 shadow-[0_0_12px_#22d3ee] ${
                         isEven ? '-right-2' : '-left-2'
                       }`}
                     />
-                  </div>
+                  </motion.div>
 
                   {/* Mobile Connecting Branch Line */}
                   <div className="md:hidden absolute left-5 top-1/2 -translate-y-1/2 w-7 h-0.5 bg-gradient-to-r from-cyan-400 to-cyan-500/30 pointer-events-none">
@@ -462,16 +463,16 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
                   <motion.div
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: false, amount: 0.15 }}
-                    variants={window.innerWidth >= 768 ? cardVariants : mobileVariants}
+                    viewport={{ once: false, amount: 0.25 }}
+                    variants={typeof window !== 'undefined' && window.innerWidth >= 768 ? cardVariants : mobileVariants}
                     whileHover={{ 
                       scale: 1.035, 
                       y: -4,
-                      boxShadow: '0 20px 35px -10px rgba(6, 182, 212, 0.25)',
-                      transition: { type: 'spring', stiffness: 300, damping: 20 }
+                      boxShadow: '0 20px 40px -10px rgba(6, 182, 212, 0.28)',
+                      transition: { duration: 0.3, ease: 'easeOut' }
                     }}
                     onClick={() => setInspectedSkill(skill)}
-                    className="group relative w-full max-w-lg p-6 rounded-2xl bg-slate-900/80 border border-slate-800/90 hover:border-cyan-500/50 hover:bg-slate-900 transition-colors duration-300 cursor-pointer flex flex-col justify-between shadow-xl backdrop-blur-md overflow-hidden"
+                    className="group relative w-full max-w-lg p-6 rounded-2xl bg-slate-900/85 border border-slate-800/90 hover:border-cyan-500/60 hover:bg-slate-900 transition-colors duration-300 cursor-pointer flex flex-col justify-between shadow-xl backdrop-blur-md overflow-hidden"
                   >
                     {/* Leaf Organic Outline Glow on Hover */}
                     <div className="absolute -inset-px rounded-2xl bg-gradient-to-br from-cyan-500/20 via-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
