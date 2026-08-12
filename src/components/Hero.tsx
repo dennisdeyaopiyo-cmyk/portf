@@ -68,10 +68,13 @@ export const Hero: React.FC<HeroProps> = ({
                 <div className="absolute -inset-1.5 rounded-full bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 opacity-90 blur-sm group-hover:opacity-100 transition-opacity animate-pulse" />
                 <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full p-1 bg-slate-950 border-2 border-cyan-400/80 shadow-2xl overflow-hidden">
                   <img
-                    src={profile.avatarUrl || "/dennis_avatar.png"}
+                    src={profile.avatarUrl}
                     alt={profile.name}
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-300"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
                   />
                 </div>
                 <div className="absolute bottom-0 right-0 p-1 bg-slate-950 rounded-full border border-slate-800 shadow-md">

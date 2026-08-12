@@ -54,10 +54,13 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="h-11 w-11 rounded-xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 p-[2px] shadow-lg shadow-cyan-500/20 shrink-0">
             <div className="h-full w-full bg-slate-950 rounded-[10px] flex items-center justify-center text-cyan-400 font-bold text-lg overflow-hidden relative">
               <img
-                src={profile.avatarUrl || "/dennis_avatar.png"}
+                src={profile.avatarUrl}
                 alt={profile.name}
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover rounded-[8px]"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
               />
             </div>
           </div>

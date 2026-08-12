@@ -25,7 +25,7 @@ import { Project, UserProfile, Testimonial } from './types';
 
 export default function App() {
   const [profile, setProfile] = useState<UserProfile>(() => {
-    const saved = localStorage.getItem('mmust_portfolio_profile_v3');
+    const saved = localStorage.getItem('mmust_portfolio_profile_v5');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -34,7 +34,9 @@ export default function App() {
           ...parsed,
           phone: parsed.phone && !parsed.phone.includes('000') ? parsed.phone : initialProfile.phone,
           whatsapp: parsed.whatsapp || initialProfile.whatsapp,
-          avatarUrl: parsed.avatarUrl && !parsed.avatarUrl.includes('assets/.aistudio') ? parsed.avatarUrl : initialProfile.avatarUrl,
+          avatarUrl: (parsed.avatarUrl && !parsed.avatarUrl.includes('dennis_avatar') && !parsed.avatarUrl.includes('assets/.aistudio') && (parsed.avatarUrl.startsWith('http') || parsed.avatarUrl.startsWith('data:'))) 
+            ? parsed.avatarUrl 
+            : initialProfile.avatarUrl,
         };
       } catch {
         return initialProfile;
@@ -70,7 +72,7 @@ export default function App() {
 
   // Save profile changes locally
   useEffect(() => {
-    localStorage.setItem('mmust_portfolio_profile_v3', JSON.stringify(profile));
+    localStorage.setItem('mmust_portfolio_profile_v5', JSON.stringify(profile));
   }, [profile]);
 
   // Track active section on scroll
