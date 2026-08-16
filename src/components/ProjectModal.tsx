@@ -48,7 +48,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/85 backdrop-blur-md overflow-y-auto">
+    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6 bg-slate-950/85 backdrop-blur-md overflow-y-auto">
       <div className="w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden relative max-h-[90vh] flex flex-col my-auto">
         
         {/* Modal Header */}
@@ -266,12 +266,13 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
         </div>
 
         {/* Modal Footer */}
-        <div className="p-4 px-6 bg-slate-950 border-t border-slate-800 flex justify-end">
+        <div className="p-4 px-6 bg-slate-950 border-t border-slate-800 flex justify-center items-center">
           <button
             onClick={onClose}
-            className="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs transition-colors"
+            className="px-8 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs sm:text-sm transition-all hover:scale-105 active:scale-95 flex items-center space-x-2 border border-slate-700"
           >
-            Close Window
+            <X className="w-4 h-4 text-slate-400" />
+            <span>Close Window</span>
           </button>
         </div>
 

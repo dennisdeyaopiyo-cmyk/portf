@@ -78,7 +78,7 @@ Answer questions from recruiters, fellow developers, professors, or visitors con
       const prompt = `${formattedHistory ? "Previous Conversation Context:\n" + formattedHistory + "\n\n" : ""}Visitor Query: ${message}`;
 
       const response = await ai.models.generateContent({
-        model: "gemini-3.6-flash",
+        model: "gemini-3.7-flash",
         contents: prompt,
         config: {
           systemInstruction,

@@ -33,21 +33,6 @@ export const Hero: React.FC<HeroProps> = ({
   onOpenAiChat,
   isAiChatOpen = false,
 }) => {
-  const [isFloating, setIsFloating] = useState(false);
-  const slotRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (slotRef.current) {
-        const rect = slotRef.current.getBoundingClientRect();
-        // Trigger float transition when the button slot reaches ~75px from top (just as it disappears under sticky navbar)
-        setIsFloating(rect.top <= 75);
-      }
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
   return (
     <section id="about" className="relative pt-8 pb-16 md:pt-16 md:pb-24 overflow-hidden border-b border-slate-800/60">
       {/* Background Subtle Mesh Grids */}
@@ -157,62 +142,24 @@ export const Hero: React.FC<HeroProps> = ({
               </div>
 
               {/* Second Row: ASK AI ASSISTANT button directly below View My Projects */}
-              {!isAiChatOpen && (
-                <div ref={slotRef} className="min-h-[52px] flex items-center">
-                  <motion.button
-                    layout
-                    onClick={onOpenAiChat}
-                    transition={{
-                      type: "spring",
-                      stiffness: 70,
-                      damping: 20,
-                      mass: 1.0
-                    }}
-                    className={
-                      isFloating
-                        ? "fixed bottom-6 right-6 z-40 px-5 py-3 rounded-full bg-gradient-to-r from-[#0d343b] via-[#12454f] to-[#0a282f] border-[2.5px] border-[#20e8db] text-[#03171e] font-black shadow-[0_0_25px_rgba(32,232,219,0.45)] hover:shadow-[0_0_35px_rgba(32,232,219,0.65)] hover:scale-105 active:scale-95 transition-shadow flex items-center space-x-3 cursor-pointer group"
-                        : "px-6 py-3 rounded-full bg-gradient-to-r from-[#0d343b] via-[#12454f] to-[#0a282f] border-[2.5px] border-[#20e8db] text-[#03171e] font-black shadow-[0_0_25px_rgba(32,232,219,0.35)] hover:shadow-[0_0_35px_rgba(32,232,219,0.55)] hover:scale-105 active:scale-95 transition-shadow flex items-center space-x-3 cursor-pointer group"
-                    }
-                    title="Ask Dennis's AI Assistant"
-                  >
-                    {/* Radial Neural Node Icon */}
-                    <div className="relative shrink-0 w-6 h-6 flex items-center justify-center">
-                      <svg viewBox="0 0 100 100" className="w-full h-full text-[#20e8db] group-hover:rotate-45 transition-transform duration-500" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="50" cy="50" r="10" fill="currentColor" />
-                        <circle cx="50" cy="50" r="17" stroke="currentColor" strokeWidth="4.5" fill="none" />
-                        
-                        <line x1="50" y1="33" x2="50" y2="17" stroke="currentColor" strokeWidth="4" />
-                        <circle cx="50" cy="11" r="5.5" fill="currentColor" />
-
-                        <line x1="62" y1="38" x2="74" y2="26" stroke="currentColor" strokeWidth="4" />
-                        <circle cx="78" cy="22" r="5.5" fill="currentColor" />
-
-                        <line x1="67" y1="50" x2="83" y2="50" stroke="currentColor" strokeWidth="4" />
-                        <circle cx="89" cy="50" r="5.5" fill="currentColor" />
-
-                        <line x1="62" y1="62" x2="74" y2="74" stroke="currentColor" strokeWidth="4" />
-                        <circle cx="78" cy="78" r="5.5" fill="currentColor" />
-
-                        <line x1="50" y1="67" x2="50" y2="83" stroke="currentColor" strokeWidth="4" />
-                        <circle cx="50" cy="89" r="5.5" fill="currentColor" />
-
-                        <line x1="38" y1="62" x2="26" y2="74" stroke="currentColor" strokeWidth="4" />
-                        <circle cx="22" cy="78" r="5.5" fill="currentColor" />
-
-                        <line x1="33" y1="50" x2="17" y2="50" stroke="currentColor" strokeWidth="4" />
-                        <circle cx="11" cy="50" r="5.5" fill="currentColor" />
-
-                        <line x1="38" y1="38" x2="26" y2="26" stroke="currentColor" strokeWidth="4" />
-                        <circle cx="22" cy="22" r="5.5" fill="currentColor" />
-                      </svg>
-                    </div>
-
-                    <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#021117] drop-shadow-sm">
-                      ASK AI ASSISTANT
-                    </span>
-                  </motion.button>
-                </div>
-              )}
+              <div className="pt-1 flex items-center">
+                <button
+                  onClick={onOpenAiChat}
+                  className="px-6 py-3 rounded-full bg-slate-900/90 hover:bg-slate-900 border-2 border-cyan-400 text-cyan-300 font-bold shadow-[0_0_20px_rgba(6,182,212,0.35)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] hover:scale-105 active:scale-95 transition-all flex items-center space-x-3 cursor-pointer group"
+                  title="Ask Dennis's AI Assistant"
+                >
+                  <div className="relative shrink-0 w-5 h-5 flex items-center justify-center text-cyan-400">
+                    <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+                  </div>
+                  <span className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-white">
+                    Ask Dennis AI
+                  </span>
+                  <span className="flex h-2 w-2 relative">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                  </span>
+                </button>
+              </div>
             </div>
 
             {/* Quick Links */}

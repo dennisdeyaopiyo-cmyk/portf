@@ -401,7 +401,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
                   rotate: 0,
                   transition: {
                     duration: 0.85, // Slow & smooth ease as requested
-                    ease: [0.16, 1, 0.3, 1], // Custom smooth cubic-bezier curve
+                    ease: "easeOut" as const,
                   },
                 },
               };
@@ -418,7 +418,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
                   x: 0,
                   transition: {
                     duration: 0.75,
-                    ease: [0.16, 1, 0.3, 1],
+                    ease: "easeOut" as const,
                   },
                 },
               };
@@ -438,7 +438,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
                     initial={{ scaleX: 0, opacity: 0 }}
                     whileInView={{ scaleX: 1, opacity: 1 }}
                     viewport={{ once: false, amount: 0.2 }}
-                    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ duration: 0.7, ease: "easeOut" }}
                     style={{ transformOrigin: isEven ? 'right center' : 'left center' }}
                     className={`hidden md:block absolute top-1/2 -translate-y-1/2 h-0.5 pointer-events-none ${
                       isEven 
@@ -553,7 +553,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
         {/* INTERACTIVE SKILL CONTENT MODAL (Triggered on Card Click) */}
         <AnimatePresence>
           {inspectedSkill && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/85 backdrop-blur-lg">
+            <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6 bg-slate-950/85 backdrop-blur-lg">
               
               {/* Backdrop Click to Close */}
               <motion.div 
@@ -572,10 +572,11 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
                 transition={{ type: 'spring', stiffness: 250, damping: 22 }}
                 className="w-full max-w-2xl bg-slate-900 border border-cyan-500/30 rounded-3xl p-6 sm:p-8 shadow-[0_0_50px_rgba(6,182,212,0.2)] relative z-10 max-h-[90vh] overflow-y-auto"
               >
-                {/* Close Button */}
+                {/* Close Button Top Right */}
                 <button
                   onClick={() => setInspectedSkill(null)}
                   className="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                  title="Close Inspector"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -672,13 +673,14 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
                     </div>
                   </div>
 
-                  {/* Modal Footer */}
-                  <div className="pt-4 border-t border-slate-800/80 flex justify-end">
+                  {/* Modal Footer - Centered Close Inspector Button */}
+                  <div className="pt-5 border-t border-slate-800/80 flex justify-center items-center">
                     <button
                       onClick={() => setInspectedSkill(null)}
-                      className="px-5 py-2.5 rounded-xl text-xs font-bold bg-cyan-500 text-slate-950 hover:bg-cyan-400 transition-colors shadow-lg shadow-cyan-500/20"
+                      className="px-8 py-3 rounded-2xl text-xs sm:text-sm font-extrabold bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-cyan-500/25 flex items-center space-x-2"
                     >
-                      Close Inspector
+                      <X className="w-4 h-4 text-slate-950 font-bold" />
+                      <span>Close Inspector</span>
                     </button>
                   </div>
                 </div>

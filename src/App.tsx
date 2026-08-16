@@ -8,6 +8,7 @@ import { TimelineSection } from './components/TimelineSection';
 import { TestimonialsSection } from './components/TestimonialsSection';
 import { ContactSection } from './components/ContactSection';
 import { AiAssistantWidget } from './components/AiAssistantWidget';
+import { FloatingAiButton } from './components/FloatingAiButton';
 import { ProjectModal } from './components/ProjectModal';
 import { PortfolioCustomizer } from './components/PortfolioCustomizer';
 import { Footer } from './components/Footer';
@@ -210,6 +211,12 @@ ${experience.map((e) => `- ${e.title} @ ${e.companyOrOrg} (${e.startDate} - ${e.
       <Footer
         profile={profile}
         onScrollToTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      />
+
+      {/* Always Visible Floating AI Twin Trigger Pill */}
+      <FloatingAiButton
+        isOpen={aiChatOpen}
+        onClick={() => setAiChatOpen(true)}
       />
 
       {/* Floating AI Twin Recruiter Assistant Widget */}
