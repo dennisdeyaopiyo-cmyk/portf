@@ -155,7 +155,7 @@ export const AiAssistantWidget: React.FC<AiAssistantWidgetProps> = ({
       }
 
       const data = await response.json();
-      const assistantReply = data.reply || getLocalPortfolioAnswer(text, profile);
+      const assistantReply = (data && data.reply) ? data.reply : getLocalPortfolioAnswer(text, profile);
 
       const botMsg: ChatMessage = {
         id: (Date.now() + 1).toString(),
@@ -166,7 +166,6 @@ export const AiAssistantWidget: React.FC<AiAssistantWidgetProps> = ({
 
       setMessages((prev) => [...prev, botMsg]);
     } catch (error) {
-      console.warn('Backend /api/chat not reachable, falling back to built-in knowledge base:', error);
       // Seamless knowledge-base fallback ensures browser visitors ALWAYS get an intelligent response
       const fallbackReply = getLocalPortfolioAnswer(text, profile);
       const botMsg: ChatMessage = {
@@ -192,8 +191,14 @@ export const AiAssistantWidget: React.FC<AiAssistantWidgetProps> = ({
       {/* Header */}
       <div className="p-4 bg-slate-950/95 border-b border-slate-800 flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <div className="p-2 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 text-slate-950 shadow-md">
-            <Bot className="w-5 h-5 font-bold" />
+          <div className="relative shrink-0 w-10 h-10 rounded-full p-0.5 bg-gradient-to-tr from-cyan-500 to-blue-600 shadow-md">
+            <img
+              src={profile.avatarUrl}
+              alt={profile.name}
+              referrerPolicy="no-referrer"
+              className="w-full h-full object-cover rounded-full"
+            />
+            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border border-slate-950" />
           </div>
           <div>
             <div className="flex items-center space-x-1.5">
@@ -227,10 +232,20 @@ export const AiAssistantWidget: React.FC<AiAssistantWidgetProps> = ({
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+            className={`flex items-end space-x-2 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
           >
+            {msg.sender === 'assistant' && (
+              <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 border border-cyan-400/60 shadow-sm mb-1">
+                <img
+                  src={profile.avatarUrl}
+                  alt={profile.name}
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
             <div
-              className={`group relative max-w-[88%] p-3.5 rounded-2xl ${
+              className={`group relative max-w-[85%] p-3.5 rounded-2xl ${
                 msg.sender === 'user'
                   ? 'bg-cyan-500 text-slate-950 font-medium rounded-br-xs shadow-md'
                   : 'bg-slate-900 text-slate-200 border border-slate-800 rounded-bl-xs shadow-inner'

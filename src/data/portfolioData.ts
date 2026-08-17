@@ -1,5 +1,5 @@
 import { UserProfile, Skill, Project, EducationItem, ExperienceItem, Certification, Testimonial } from '../types';
-import dennisExactPhoto from '../assets/images/dennis_exact_photo_1786532038241.jpg';
+import dennisExactPhoto from '../assets/images/dennis_photo.jpg';
 
 export const initialProfile: UserProfile = {
   name: "Dennis Opiyo",

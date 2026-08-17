@@ -8,13 +8,17 @@ import {
   GraduationCap, 
   Send, 
   FileText,
-  Sparkles
+  Sparkles,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { UserProfile } from '../types';
 
 interface NavbarProps {
   profile: UserProfile;
   activeSection: string;
+  theme: 'dark' | 'light';
+  onToggleTheme: () => void;
   onNavigate: (sectionId: string) => void;
   onOpenAiChat: () => void;
   onOpenCustomizer: () => void;
@@ -24,6 +28,8 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({
   profile,
   activeSection,
+  theme,
+  onToggleTheme,
   onNavigate,
   onOpenAiChat,
   onOpenCustomizer,
@@ -47,7 +53,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-slate-950/80 border-b border-slate-800/80 transition-all duration-300">
+    <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-slate-950/80 border-b border-slate-800/80 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand & MMUST Status */}
         <div className="flex items-center space-x-3 cursor-pointer" onClick={() => handleNavClick('about')}>
@@ -81,7 +87,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
+        <nav className="hidden md:flex items-center space-x-1 lg:space-x-2" aria-label="Main Navigation">
           {navItems.map((item) => {
             const isActive = activeSection === item.id;
             return (
@@ -100,11 +106,32 @@ export const Navbar: React.FC<NavbarProps> = ({
           })}
         </nav>
 
-        {/* Action Buttons */}
-        <div className="hidden lg:flex items-center space-x-2">
+        {/* Action Buttons & Theme Toggle */}
+        <div className="hidden md:flex items-center space-x-2">
+          {/* Accessible Theme Toggle Button */}
+          <button
+            id="theme-toggle-btn"
+            onClick={onToggleTheme}
+            aria-label={theme === 'dark' ? 'Switch to High-Contrast Light Theme' : 'Switch to Dark Theme'}
+            title={theme === 'dark' ? 'Switch to High-Contrast Light Theme' : 'Switch to Dark Theme'}
+            className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 transition-all cursor-pointer group"
+          >
+            {theme === 'dark' ? (
+              <>
+                <Sun className="w-4 h-4 text-amber-400 group-hover:rotate-45 transition-transform duration-300" />
+                <span className="text-[11px] font-medium hidden lg:inline">Light Mode</span>
+              </>
+            ) : (
+              <>
+                <Moon className="w-4 h-4 text-cyan-600 group-hover:-rotate-12 transition-transform duration-300" />
+                <span className="text-[11px] font-medium hidden lg:inline">Dark Mode</span>
+              </>
+            )}
+          </button>
+
           <button
             onClick={onOpenAiChat}
-            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-cyan-500/20 to-blue-500/20 hover:from-cyan-500/30 hover:to-blue-500/30 text-cyan-300 border border-cyan-500/30 transition-all shadow-sm"
+            className="hidden lg:flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-cyan-500/20 to-blue-500/20 hover:from-cyan-500/30 hover:to-blue-500/30 text-cyan-300 border border-cyan-500/30 transition-all shadow-sm"
             title="Ask Dennis's AI Twin questions about his experience"
           >
             <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
@@ -116,7 +143,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors"
           >
             <FileText className="w-3.5 h-3.5 text-slate-400" />
-            <span>Download CV</span>
+            <span>CV</span>
           </button>
 
           <button
@@ -128,8 +155,21 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
         </div>
 
-        {/* Mobile Navigation Toggle */}
-        <div className="flex md:hidden items-center space-x-2">
+        {/* Mobile Navigation Toggle & Theme Switcher */}
+        <div className="flex md:hidden items-center space-x-1.5">
+          {/* Mobile Theme Toggle Button */}
+          <button
+            onClick={onToggleTheme}
+            aria-label={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+            className="p-2 rounded-lg bg-slate-800/90 text-slate-200 border border-slate-700"
+          >
+            {theme === 'dark' ? (
+              <Sun className="w-4 h-4 text-amber-400" />
+            ) : (
+              <Moon className="w-4 h-4 text-cyan-600" />
+            )}
+          </button>
+
           <button
             onClick={onOpenAiChat}
             className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/30"
@@ -141,6 +181,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 focus:outline-none"
+            aria-label="Toggle Menu"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -167,6 +208,20 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           <div className="pt-3 border-t border-slate-800 flex flex-col space-y-2">
+            <button
+              onClick={() => {
+                onToggleTheme();
+                setMobileMenuOpen(false);
+              }}
+              className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-sm font-semibold bg-slate-800/80 text-slate-200 border border-slate-700"
+            >
+              <div className="flex items-center space-x-2">
+                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-cyan-600" />}
+                <span>{theme === 'dark' ? 'Switch to High-Contrast Light' : 'Switch to Dark Mode'}</span>
+              </div>
+              <span className="text-xs text-slate-400 font-mono uppercase">{theme}</span>
+            </button>
+
             <button
               onClick={() => {
                 onOpenAiChat();

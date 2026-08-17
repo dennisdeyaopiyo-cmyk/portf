@@ -26,18 +26,14 @@ import { Project, UserProfile, Testimonial } from './types';
 
 export default function App() {
   const [profile, setProfile] = useState<UserProfile>(() => {
-    const saved = localStorage.getItem('mmust_portfolio_profile_v5');
+    const saved = localStorage.getItem('mmust_portfolio_profile_v6');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
         return {
           ...initialProfile,
           ...parsed,
-          phone: parsed.phone && !parsed.phone.includes('000') ? parsed.phone : initialProfile.phone,
-          whatsapp: parsed.whatsapp || initialProfile.whatsapp,
-          avatarUrl: (parsed.avatarUrl && !parsed.avatarUrl.includes('dennis_avatar') && !parsed.avatarUrl.includes('assets/.aistudio') && (parsed.avatarUrl.startsWith('http') || parsed.avatarUrl.startsWith('data:'))) 
-            ? parsed.avatarUrl 
-            : initialProfile.avatarUrl,
+          avatarUrl: initialProfile.avatarUrl,
         };
       } catch {
         return initialProfile;
@@ -71,9 +67,36 @@ export default function App() {
   const [aiChatOpen, setAiChatOpen] = useState(false);
   const [customizerOpen, setCustomizerOpen] = useState(false);
 
+  // Theme Management (Dark vs High-Contrast Light with Accessibility Preference Detection)
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    const saved = localStorage.getItem('mmust_portfolio_theme');
+    if (saved === 'dark' || saved === 'light') return saved;
+    // Check OS preference
+    if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+      return 'light';
+    }
+    return 'dark';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('mmust_portfolio_theme', theme);
+    const root = document.documentElement;
+    if (theme === 'light') {
+      root.classList.add('light');
+      root.setAttribute('data-theme', 'light');
+    } else {
+      root.classList.remove('light');
+      root.setAttribute('data-theme', 'dark');
+    }
+  }, [theme]);
+
+  const handleToggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
   // Save profile changes locally
   useEffect(() => {
-    localStorage.setItem('mmust_portfolio_profile_v5', JSON.stringify(profile));
+    localStorage.setItem('mmust_portfolio_profile_v6', JSON.stringify(profile));
   }, [profile]);
 
   // Track active section on scroll
@@ -160,6 +183,8 @@ ${experience.map((e) => `- ${e.title} @ ${e.companyOrOrg} (${e.startDate} - ${e.
       <Navbar
         profile={profile}
         activeSection={activeSection}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
         onNavigate={handleNavigate}
         onOpenAiChat={() => setAiChatOpen(true)}
         onOpenCustomizer={() => setCustomizerOpen(true)}

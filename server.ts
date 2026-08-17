@@ -77,23 +77,51 @@ Answer questions from recruiters, fellow developers, professors, or visitors con
 
       const prompt = `${formattedHistory ? "Previous Conversation Context:\n" + formattedHistory + "\n\n" : ""}Visitor Query: ${message}`;
 
-      const response = await ai.models.generateContent({
-        model: "gemini-3.7-flash",
-        contents: prompt,
-        config: {
-          systemInstruction,
-          temperature: 0.7,
-        },
-      });
+      // Candidate models in order of priority (using current valid Gemini model names)
+      const candidateModels = ["gemini-2.5-flash", "gemini-flash-latest", "gemini-3.7-flash", "gemini-3.1-flash-lite"];
+      
+      let reply: string | null = null;
 
-      const reply = response.text || "I'm Dennis's AI assistant. Feel free to ask about my projects, cloud skills, or experience at MMUST!";
+      for (const model of candidateModels) {
+        try {
+          const response = await ai.models.generateContent({
+            model,
+            contents: prompt,
+            config: {
+              systemInstruction,
+              temperature: 0.7,
+            },
+          });
+
+          if (response && response.text) {
+            reply = response.text;
+            break;
+          }
+        } catch (err: any) {
+          // Log only brief info without noisy stack traces
+          const errMsg = err?.message || String(err);
+          const isQuota = errMsg.includes("429") || errMsg.includes("RESOURCE_EXHAUSTED");
+          const isNotFound = errMsg.includes("404") || errMsg.includes("NOT_FOUND");
+          
+          if (!isQuota && !isNotFound) {
+            console.warn(`[AI Note] Model ${model} unavailable: ${errMsg.slice(0, 100)}`);
+          }
+        }
+      }
+
+      if (!reply) {
+        // Return gracefully so client-side expert knowledge engine responds instantly
+        return res.json({
+          reply: null,
+          fallback: true,
+        });
+      }
+
       return res.json({ reply });
     } catch (error: any) {
-      console.error("Error in /api/chat:", error);
-      return res.status(500).json({
-        error: "Failed to generate AI response",
-        details: error?.message || "Unknown error",
-        reply: "Sorry, I had a temporary glitch answering that! Please try again or feel free to reach out to Dennis directly via the contact form below.",
+      return res.json({
+        reply: null,
+        fallback: true,
       });
     }
   });
