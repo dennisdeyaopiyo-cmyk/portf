@@ -10,8 +10,10 @@ import { ContactSection } from './components/ContactSection';
 import { AiAssistantWidget } from './components/AiAssistantWidget';
 import { FloatingAiButton } from './components/FloatingAiButton';
 import { ProjectModal } from './components/ProjectModal';
+import { PhotoModal } from './components/PhotoModal';
 import { PortfolioCustomizer } from './components/PortfolioCustomizer';
 import { Footer } from './components/Footer';
+import { BinaryVortexCanvas, VortexDensity } from './components/BinaryVortexCanvas';
 
 import { 
   initialProfile, 
@@ -26,14 +28,14 @@ import { Project, UserProfile, Testimonial } from './types';
 
 export default function App() {
   const [profile, setProfile] = useState<UserProfile>(() => {
-    const saved = localStorage.getItem('mmust_portfolio_profile_v6');
+    const saved = localStorage.getItem('mmust_portfolio_profile_v9');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
         return {
           ...initialProfile,
           ...parsed,
-          avatarUrl: initialProfile.avatarUrl,
+          avatarUrl: parsed.avatarUrl || initialProfile.avatarUrl || "/dennis_photo.png",
         };
       } catch {
         return initialProfile;
@@ -66,6 +68,13 @@ export default function App() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [aiChatOpen, setAiChatOpen] = useState(false);
   const [customizerOpen, setCustomizerOpen] = useState(false);
+  const [photoModalOpen, setPhotoModalOpen] = useState(false);
+
+  // 3D Rotating Binary Vortex Tunnel State (starts at Skills, ends at Projects)
+  const [vortexSpeed, setVortexSpeed] = useState<number>(1);
+  const [vortexDensity, setVortexDensity] = useState<VortexDensity>('dense');
+  const [isRotating, setIsRotating] = useState<boolean>(true);
+  const [watermarkStyle, setWatermarkStyle] = useState<'full-stack' | 'prominent' | 'stealth'>('full-stack');
 
   // Theme Management (Dark vs High-Contrast Light with Accessibility Preference Detection)
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
@@ -96,7 +105,7 @@ export default function App() {
 
   // Save profile changes locally
   useEffect(() => {
-    localStorage.setItem('mmust_portfolio_profile_v6', JSON.stringify(profile));
+    localStorage.setItem('mmust_portfolio_profile_v9', JSON.stringify(profile));
   }, [profile]);
 
   // Track active section on scroll
@@ -201,16 +210,46 @@ ${experience.map((e) => `- ${e.title} @ ${e.companyOrOrg} (${e.startDate} - ${e.
           onContactClick={() => handleNavigate('contact')}
           onOpenAiChat={() => setAiChatOpen(true)}
           isAiChatOpen={aiChatOpen}
+          onPhotoClick={() => setPhotoModalOpen(true)}
         />
 
-        {/* Section 2: Programming Languages & Cloud Technologies */}
-        <SkillsSection skills={skills} />
+        {/* Continuous 3D Rotating Binary Vortex & Dense Dropping Rain Zone: Starts at Programming Languages & Cloud Technologies, Ends at Projects */}
+        <div id="vortex-continuous-zone" className="relative overflow-hidden bg-slate-950 cyber-matrix-zone">
+          {/* Full-Height 3D Rotating Binary Vortex & Dense Dropping Rain Canvas */}
+          <BinaryVortexCanvas
+            opacity={0.92}
+            speed={vortexSpeed}
+            density={vortexDensity}
+            isRotating={isRotating}
+            watermarkStyle={watermarkStyle}
+            interactive={true}
+            className="absolute inset-0 w-full h-full pointer-events-none z-0"
+          />
 
-        {/* Section 3: Specific Featured Projects */}
-        <ProjectsSection
-          projects={projects}
-          onSelectProject={(project) => setSelectedProject(project)}
-        />
+          {/* Section content placed over the continuous rotating 3D binary vortex and dense dropping rain */}
+          <div className="relative z-10">
+            {/* Section 2: Programming Languages & Cloud Technologies (Starts here) */}
+            <SkillsSection
+              skills={skills}
+              vortexSpeed={vortexSpeed}
+              onSpeedChange={setVortexSpeed}
+              vortexDensity={vortexDensity}
+              onDensityChange={setVortexDensity}
+              isRotating={isRotating}
+              onToggleRotate={() => setIsRotating((prev) => !prev)}
+              watermarkStyle={watermarkStyle}
+              onToggleWatermark={(style) => setWatermarkStyle(style as 'full-stack' | 'prominent' | 'stealth')}
+              hasExternalVortex={true}
+            />
+
+            {/* Section 3: Specific Featured Projects (Ends here) */}
+            <ProjectsSection
+              projects={projects}
+              onSelectProject={(project) => setSelectedProject(project)}
+              hasExternalVortex={true}
+            />
+          </div>
+        </div>
 
         {/* Section 4: Education & Masinde Muliro University Spotlight */}
         <EducationSection education={education} />
@@ -255,6 +294,13 @@ ${experience.map((e) => `- ${e.title} @ ${e.companyOrOrg} (${e.startDate} - ${e.
       <ProjectModal
         project={selectedProject}
         onClose={() => setSelectedProject(null)}
+      />
+
+      {/* High-Resolution Portrait Photo Lightbox Modal */}
+      <PhotoModal
+        isOpen={photoModalOpen}
+        onClose={() => setPhotoModalOpen(false)}
+        profile={profile}
       />
 
       {/* Portfolio Profile Customizer Drawer */}

@@ -11,15 +11,18 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { Project } from '../types';
+import { BinaryRainCanvas } from './BinaryRainCanvas';
 
 interface ProjectsSectionProps {
   projects: Project[];
   onSelectProject: (project: Project) => void;
+  hasExternalVortex?: boolean;
 }
 
 export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
   projects,
   onSelectProject,
+  hasExternalVortex = true,
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -45,8 +48,13 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
   const featuredProject = projects.find(p => p.featured) || projects[0];
 
   return (
-    <section id="projects" className="py-16 md:py-24 border-b border-slate-800/60 relative bg-slate-950/90">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="projects" className="py-16 md:py-24 border-b border-slate-800/60 relative bg-transparent overflow-hidden">
+      {/* 3D Rotating Binary Vortex Tunnel Canvas continuing behind project cards if not externally provided */}
+      {!hasExternalVortex && (
+        <BinaryRainCanvas opacity={0.75} speed={0.85} density="dense" interactive={true} />
+      )}
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
@@ -190,7 +198,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
           {filteredProjects.map((project) => (
             <div
               key={project.id}
-              className="group rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-cyan-500/40 hover:bg-slate-900 transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-xl"
+              className="group rounded-2xl bg-slate-900/85 backdrop-blur-md border border-slate-800 hover:border-cyan-500/40 hover:bg-slate-900/90 transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-xl"
             >
               {/* Card Banner Header */}
               <div className={`p-5 bg-gradient-to-r ${project.imageBg} relative`}>

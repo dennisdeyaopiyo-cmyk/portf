@@ -14,7 +14,9 @@ import {
   Cpu, 
   Box, 
   Layers,
-  MessageCircle
+  MessageCircle,
+  User,
+  Maximize2
 } from 'lucide-react';
 import { UserProfile } from '../types';
 
@@ -24,6 +26,7 @@ interface HeroProps {
   onContactClick: () => void;
   onOpenAiChat: () => void;
   isAiChatOpen?: boolean;
+  onPhotoClick?: () => void;
 }
 
 export const Hero: React.FC<HeroProps> = ({
@@ -32,7 +35,9 @@ export const Hero: React.FC<HeroProps> = ({
   onContactClick,
   onOpenAiChat,
   isAiChatOpen = false,
+  onPhotoClick,
 }) => {
+  const [rightPanelTab, setRightPanelTab] = useState<'portrait' | 'shell'>('portrait');
   return (
     <section id="about" className="relative pt-8 pb-16 md:pt-16 md:pb-24 overflow-hidden border-b border-slate-800/60">
       {/* Background Subtle Mesh Grids */}
@@ -48,17 +53,21 @@ export const Hero: React.FC<HeroProps> = ({
             
             {/* Profile Avatar & Status Pills Header */}
             <div className="flex items-center space-x-4">
-              <div className="relative group shrink-0">
+              <div 
+                className="relative group shrink-0 cursor-pointer"
+                onClick={onPhotoClick}
+                title="Click to view full portrait"
+              >
                 {/* Glowing Circular Frame Ring (matching reference purple/cyan avatar halo) */}
                 <div className="absolute -inset-1.5 rounded-full bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 opacity-90 blur-sm group-hover:opacity-100 transition-opacity animate-pulse" />
                 <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full p-1 bg-slate-950 border-2 border-cyan-400/80 shadow-2xl overflow-hidden">
                   <img
-                    src={profile.avatarUrl}
+                    src={profile.avatarUrl || "/dennis_photo.png"}
                     alt={profile.name}
                     referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover object-top rounded-full group-hover:scale-105 transition-transform duration-300"
                     onError={(e) => {
-                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.src = "/dennis_photo.png";
                     }}
                   />
                 </div>
@@ -202,56 +211,141 @@ export const Hero: React.FC<HeroProps> = ({
             </div>
           </div>
 
-          {/* Right Column - Terminal Shell Preview & Quick Stats Card */}
-          <div className="lg:col-span-5 space-y-6">
-            {/* Terminal Window Box */}
-            <div className="rounded-2xl bg-slate-900/90 border border-slate-800 shadow-2xl overflow-hidden backdrop-blur-xl">
-              {/* Shell Top Header */}
+          {/* Right Column - Featured Portrait Card & Cloud Shell View */}
+          <div className="lg:col-span-5 space-y-5">
+            {/* Interactive Showcase Container */}
+            <div className="rounded-3xl bg-slate-900/90 border border-slate-800 shadow-2xl overflow-hidden backdrop-blur-xl transition-all">
+              {/* Card Header with View Switcher */}
               <div className="px-4 py-3 bg-slate-950/90 border-b border-slate-800 flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <div className="w-3 h-3 rounded-full bg-red-500/80" />
                   <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
                   <div className="w-3 h-3 rounded-full bg-green-500/80" />
                 </div>
-                <div className="flex items-center space-x-1 text-xs text-slate-400 font-mono">
-                  <Terminal className="w-3.5 h-3.5 text-cyan-400" />
-                  <span>dennis@mmust-cloud-shell:~</span>
+                
+                {/* View Switcher Pills */}
+                <div className="flex items-center p-1 rounded-xl bg-slate-900 border border-slate-800 text-xs">
+                  <button
+                    onClick={() => setRightPanelTab('portrait')}
+                    className={`px-3 py-1 rounded-lg font-medium transition-all flex items-center space-x-1.5 cursor-pointer ${
+                      rightPanelTab === 'portrait'
+                        ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-sm'
+                        : 'text-slate-400 hover:text-slate-200'
+                    }`}
+                  >
+                    <User className="w-3.5 h-3.5" />
+                    <span>Portrait View</span>
+                  </button>
+                  <button
+                    onClick={() => setRightPanelTab('shell')}
+                    className={`px-3 py-1 rounded-lg font-medium transition-all flex items-center space-x-1.5 cursor-pointer ${
+                      rightPanelTab === 'shell'
+                        ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-sm'
+                        : 'text-slate-400 hover:text-slate-200'
+                    }`}
+                  >
+                    <Terminal className="w-3.5 h-3.5" />
+                    <span>Cloud Shell</span>
+                  </button>
                 </div>
-                <div className="text-[10px] uppercase tracking-wider text-slate-500 font-mono">
-                  BASH
+
+                <div className="text-[10px] uppercase tracking-wider text-slate-500 font-mono hidden sm:block">
+                  {rightPanelTab === 'portrait' ? 'PORTRAIT' : 'BASH'}
                 </div>
               </div>
 
-              {/* Shell Code Body */}
-              <div className="p-5 font-mono text-xs sm:text-sm space-y-3 text-slate-300">
-                <div className="flex items-start space-x-2">
-                  <span className="text-cyan-400 font-bold">$</span>
-                  <span className="text-slate-200">whoami --details</span>
-                </div>
-                <div className="pl-4 text-slate-400 space-y-1">
-                  <p><span className="text-cyan-400">Name:</span> {profile.name}</p>
-                  <p><span className="text-cyan-400">Institution:</span> Masinde Muliro Univ. of Sci. & Tech.</p>
-                  <p><span className="text-cyan-400">Degree:</span> {profile.degree}</p>
-                  <p><span className="text-cyan-400">Focus:</span> Cloud Architecture & Software Eng.</p>
-                </div>
+              {/* View 1: Real Portrait Showcase (Framed exactly as Dennis requested) */}
+              {rightPanelTab === 'portrait' ? (
+                <div className="relative group p-4 bg-gradient-to-b from-slate-950/60 to-slate-900/90">
+                  <div 
+                    className="relative w-full aspect-[3/4] max-h-[460px] mx-auto rounded-2xl overflow-hidden border border-cyan-500/30 shadow-2xl cursor-pointer group/photo bg-slate-950"
+                    onClick={onPhotoClick}
+                    title="Click to view full resolution portrait"
+                  >
+                    <img
+                      src={profile.avatarUrl || "/dennis_photo.png"}
+                      alt={profile.name}
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover object-top group-hover/photo:scale-105 transition-transform duration-500 select-none"
+                      onError={(e) => {
+                        e.currentTarget.src = "/dennis_photo.png";
+                      }}
+                    />
 
-                <div className="flex items-start space-x-2 pt-1">
-                  <span className="text-cyan-400 font-bold">$</span>
-                  <span className="text-slate-200">docker run -d -p 8080:80 mmust/cloud-sync:v2.0</span>
-                </div>
-                <div className="pl-4 text-emerald-400 font-mono text-xs flex items-center space-x-2">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Container f7a9c2b01 e.g. GCP Cloud Run Service Active</span>
-                </div>
+                    {/* Gradient Overlay for Text Readability at Bottom */}
+                    <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent pointer-events-none" />
 
-                <div className="flex items-start space-x-2 pt-1">
-                  <span className="text-cyan-400 font-bold">$</span>
-                  <span className="text-slate-200">gcloud run deploy --region=europe-west2</span>
+                    {/* Expand Hover Badge Top-Right */}
+                    <div className="absolute top-3 right-3 p-2 rounded-xl bg-slate-950/80 backdrop-blur-md border border-slate-700/80 text-slate-300 opacity-90 group-hover/photo:opacity-100 group-hover/photo:text-cyan-400 group-hover/photo:scale-110 transition-all shadow-lg flex items-center space-x-1.5 text-xs">
+                      <Maximize2 className="w-3.5 h-3.5" />
+                      <span className="font-semibold text-[11px] hidden sm:inline">Expand</span>
+                    </div>
+
+                    {/* Status Pill Top-Left */}
+                    <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-emerald-500/30 text-emerald-400 text-xs font-semibold flex items-center space-x-1.5 shadow-lg">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span>Available for Hire</span>
+                    </div>
+
+                    {/* Bottom Metadata Bar */}
+                    <div className="absolute bottom-3 inset-x-3 p-3 rounded-xl bg-slate-900/90 backdrop-blur-md border border-slate-800/80 flex items-center justify-between text-xs">
+                      <div>
+                        <p className="font-bold text-white text-sm tracking-tight">{profile.name}</p>
+                        <p className="text-[11px] text-cyan-400 font-medium">{profile.title}</p>
+                      </div>
+                      <div className="text-right">
+                        <span className="inline-flex items-center text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                          <CheckCircle2 className="w-3 h-3 mr-1" />
+                          Verified MMUST
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Caption beneath portrait */}
+                  <div className="pt-3 px-1 flex items-center justify-between text-xs text-slate-400">
+                    <span className="text-[11px] text-slate-400">Real Portrait • 3:4 High-Resolution</span>
+                    <button
+                      onClick={onPhotoClick}
+                      className="text-cyan-400 hover:text-cyan-300 transition-colors flex items-center space-x-1 cursor-pointer font-medium"
+                    >
+                      <span>Click to enlarge photo</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </button>
+                  </div>
                 </div>
-                <div className="pl-4 text-cyan-300 font-mono text-xs animate-pulse">
-                  ✔ Deploying container image to Cloud Run... Done!
+              ) : (
+                /* View 2: Cloud Shell Terminal */
+                <div className="p-5 font-mono text-xs sm:text-sm space-y-3 text-slate-300">
+                  <div className="flex items-start space-x-2">
+                    <span className="text-cyan-400 font-bold">$</span>
+                    <span className="text-slate-200">whoami --details</span>
+                  </div>
+                  <div className="pl-4 text-slate-400 space-y-1">
+                    <p><span className="text-cyan-400">Name:</span> {profile.name}</p>
+                    <p><span className="text-cyan-400">Institution:</span> Masinde Muliro Univ. of Sci. & Tech.</p>
+                    <p><span className="text-cyan-400">Degree:</span> {profile.degree}</p>
+                    <p><span className="text-cyan-400">Focus:</span> Cloud Architecture & Software Eng.</p>
+                  </div>
+
+                  <div className="flex items-start space-x-2 pt-1">
+                    <span className="text-cyan-400 font-bold">$</span>
+                    <span className="text-slate-200">docker run -d -p 8080:80 mmust/cloud-sync:v2.0</span>
+                  </div>
+                  <div className="pl-4 text-emerald-400 font-mono text-xs flex items-center space-x-2">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Container f7a9c2b01 e.g. GCP Cloud Run Service Active</span>
+                  </div>
+
+                  <div className="flex items-start space-x-2 pt-1">
+                    <span className="text-cyan-400 font-bold">$</span>
+                    <span className="text-slate-200">gcloud run deploy --region=europe-west2</span>
+                  </div>
+                  <div className="pl-4 text-cyan-300 font-mono text-xs animate-pulse">
+                    ✔ Deploying container image to Cloud Run... Done!
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Quick Stats Grid */}

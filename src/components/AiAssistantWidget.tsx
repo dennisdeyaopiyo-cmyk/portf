@@ -193,10 +193,13 @@ export const AiAssistantWidget: React.FC<AiAssistantWidgetProps> = ({
         <div className="flex items-center space-x-3">
           <div className="relative shrink-0 w-10 h-10 rounded-full p-0.5 bg-gradient-to-tr from-cyan-500 to-blue-600 shadow-md">
             <img
-              src={profile.avatarUrl}
+              src={profile.avatarUrl || "/dennis_photo.png"}
               alt={profile.name}
               referrerPolicy="no-referrer"
-              className="w-full h-full object-cover rounded-full"
+              className="w-full h-full object-cover object-top rounded-full"
+              onError={(e) => {
+                e.currentTarget.src = "/dennis_photo.png";
+              }}
             />
             <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border border-slate-950" />
           </div>
@@ -237,10 +240,13 @@ export const AiAssistantWidget: React.FC<AiAssistantWidgetProps> = ({
             {msg.sender === 'assistant' && (
               <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 border border-cyan-400/60 shadow-sm mb-1">
                 <img
-                  src={profile.avatarUrl}
+                  src={profile.avatarUrl || "/dennis_photo.png"}
                   alt={profile.name}
                   referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-top"
+                  onError={(e) => {
+                    e.currentTarget.src = "/dennis_photo.png";
+                  }}
                 />
               </div>
             )}

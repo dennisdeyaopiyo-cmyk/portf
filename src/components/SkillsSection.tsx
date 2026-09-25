@@ -23,12 +23,24 @@ import {
   ExternalLink,
   ChevronRight,
   Copy,
-  Check
+  Check,
+  Binary,
+  RotateCw
 } from 'lucide-react';
 import { Skill, SkillCategory } from '../types';
+import { BinaryVortexCanvas, VortexDensity } from './BinaryVortexCanvas';
 
-interface SkillsSectionProps {
+export interface SkillsSectionProps {
   skills: Skill[];
+  vortexSpeed?: number;
+  onSpeedChange?: (speed: number) => void;
+  vortexDensity?: VortexDensity;
+  onDensityChange?: (density: VortexDensity) => void;
+  isRotating?: boolean;
+  onToggleRotate?: () => void;
+  watermarkStyle?: 'full-stack' | 'prominent' | 'stealth';
+  onToggleWatermark?: (style: 'full-stack' | 'prominent' | 'stealth') => void;
+  hasExternalVortex?: boolean;
 }
 
 // Custom code/command snippets for each technology
@@ -231,11 +243,63 @@ public class StudentController {
   }
 };
 
-export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
+export const SkillsSection: React.FC<SkillsSectionProps> = ({
+  skills,
+  vortexSpeed,
+  onSpeedChange,
+  vortexDensity,
+  onDensityChange,
+  isRotating,
+  onToggleRotate,
+  watermarkStyle,
+  onToggleWatermark,
+  hasExternalVortex = true,
+}) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [inspectedSkill, setInspectedSkill] = useState<Skill | null>(null);
   const [copiedSnippet, setCopiedSnippet] = useState<boolean>(false);
+
+  // Local state fallbacks if props are not passed
+  const [localSpeed, setLocalSpeed] = useState<number>(1);
+  const [localDensity, setLocalDensity] = useState<VortexDensity>('dense');
+  const [localRotating, setLocalRotating] = useState<boolean>(true);
+  const [localWatermark, setLocalWatermark] = useState<'full-stack' | 'prominent' | 'stealth'>('full-stack');
+  const [localActive, setLocalActive] = useState<boolean>(true);
+
+  const effectiveSpeed = vortexSpeed !== undefined ? vortexSpeed : localSpeed;
+  const effectiveDensity = vortexDensity !== undefined ? vortexDensity : localDensity;
+  const effectiveRotating = isRotating !== undefined ? isRotating : localRotating;
+  const effectiveWatermark = watermarkStyle !== undefined ? watermarkStyle : localWatermark;
+
+  const handleCycleSpeed = () => {
+    const next = effectiveSpeed === 1 ? 1.6 : effectiveSpeed === 1.6 ? 0.6 : 1;
+    if (onSpeedChange) onSpeedChange(next);
+    else setLocalSpeed(next);
+  };
+
+  const handleCycleDensity = () => {
+    const next: VortexDensity =
+      effectiveDensity === 'dense' ? 'ultra' : effectiveDensity === 'ultra' ? 'compact' : 'dense';
+    if (onDensityChange) onDensityChange(next);
+    else setLocalDensity(next);
+  };
+
+  const handleToggleRotation = () => {
+    if (onToggleRotate) onToggleRotate();
+    else setLocalRotating((prev) => !prev);
+  };
+
+  const handleToggleWatermark = () => {
+    const next =
+      effectiveWatermark === 'full-stack'
+        ? 'prominent'
+        : effectiveWatermark === 'prominent'
+        ? 'stealth'
+        : 'full-stack';
+    if (onToggleWatermark) onToggleWatermark(next);
+    else setLocalWatermark(next);
+  };
 
   const categories: { id: string; label: string }[] = [
     { id: 'all', label: 'All Stack' },
@@ -308,20 +372,102 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
   };
 
   return (
-    <section id="skills" className="py-20 md:py-28 border-b border-slate-800/60 relative bg-slate-950 overflow-hidden">
+    <section id="skills" className="py-20 md:py-28 border-b border-slate-800/60 relative bg-transparent overflow-hidden">
       
+      {/* 3D Rotating Binary Vortex Tunnel Canvas (Fallback if not wrapped externally) */}
+      {!hasExternalVortex && localActive && (
+        <BinaryVortexCanvas
+          opacity={0.88}
+          speed={effectiveSpeed}
+          density={effectiveDensity}
+          isRotating={effectiveRotating}
+          watermarkStyle={effectiveWatermark}
+          interactive={true}
+        />
+      )}
+
       {/* Background ambient lighting grid */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(6,182,212,0.12),rgba(255,255,255,0))]" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-25" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(16,185,129,0.06),rgba(255,255,255,0))] pointer-events-none" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-20 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div>
-            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-cyan-500/10 text-cyan-400 border border-cyan-500/25 mb-3 shadow-[0_0_15px_rgba(6,182,212,0.15)]">
-              <Sparkles className="w-3.5 h-3.5 animate-pulse text-cyan-300" />
-              <span>Interactive Branching Tech Tree</span>
+            <div className="flex flex-wrap items-center gap-2 mb-3">
+              <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-cyan-500/10 text-cyan-400 border border-cyan-500/25 shadow-[0_0_15px_rgba(6,182,212,0.15)]">
+                <Sparkles className="w-3.5 h-3.5 animate-pulse text-cyan-300" />
+                <span>Interactive Branching Tech Tree</span>
+              </div>
+
+              {/* 3D Vortex: Rotating with Ease Button */}
+              <button
+                onClick={handleToggleRotation}
+                className={`inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-bold border transition-all cursor-pointer group shadow-[0_0_15px_rgba(34,197,94,0.2)] ${
+                  effectiveRotating
+                    ? 'bg-emerald-950/90 text-emerald-300 border-emerald-500/50 hover:bg-emerald-900/60'
+                    : 'bg-slate-900/90 text-slate-400 border-slate-700 hover:border-slate-500'
+                }`}
+                title="Toggle 3D Vortex rotation with ease"
+              >
+                <RotateCw
+                  className={`w-3.5 h-3.5 text-emerald-400 ${effectiveRotating ? 'animate-spin' : ''}`}
+                  style={{ animationDuration: '6s' }}
+                />
+                <span>Rotation:</span>
+                <span className="text-emerald-400 underline decoration-dotted font-semibold">
+                  {effectiveRotating ? 'Rotating with Ease' : 'Paused'}
+                </span>
+              </button>
+
+              {/* 3D Vortex Speed Controller */}
+              <button
+                onClick={handleCycleSpeed}
+                className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-bold bg-slate-900/90 text-slate-300 border border-emerald-500/30 hover:border-emerald-400 hover:text-emerald-300 transition-all cursor-pointer group"
+                title="Click to cycle rotation speed (Smooth Ease -> Hyper Warp -> Chill Drift)"
+              >
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span>Speed:</span>
+                <span className="text-emerald-400 underline decoration-dotted font-semibold">
+                  {effectiveSpeed === 1 ? 'Smooth Ease (1x)' : effectiveSpeed === 1.6 ? 'Hyper (1.6x)' : 'Chill (0.6x)'}
+                </span>
+              </button>
+
+              {/* 3D Vortex Density (0s and 1s close to each other) */}
+              <button
+                onClick={handleCycleDensity}
+                className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-bold bg-emerald-950/90 text-emerald-400 border border-emerald-500/40 hover:border-emerald-400 hover:bg-emerald-900/60 transition-all shadow-[0_0_15px_rgba(34,197,94,0.25)] cursor-pointer group"
+                title="Toggle density/closeness of 0s and 1s in the 3D vortex"
+              >
+                <Binary className="w-3.5 h-3.5 text-emerald-300 animate-pulse" />
+                <span className="text-emerald-300">Vortex Grid:</span>
+                <span className="text-emerald-400 underline decoration-dotted font-semibold">
+                  {effectiveDensity === 'ultra' ? 'Ultra (Closest)' : effectiveDensity === 'dense' ? 'Dense (Close)' : 'Compact'}
+                </span>
+              </button>
+
+              {/* Watermark: FULL-STACK replacing Shutterstock */}
+              <button
+                onClick={handleToggleWatermark}
+                className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-bold bg-cyan-950/80 text-cyan-300 border border-cyan-500/40 hover:border-cyan-400 hover:bg-cyan-900/50 transition-all shadow-[0_0_15px_rgba(6,182,212,0.2)] cursor-pointer group"
+                title="Watermark replaced Shutterstock with FULL-STACK. Click to toggle styling."
+              >
+                <Sparkles className="w-3.5 h-3.5 text-cyan-300 animate-pulse" />
+                <span className="text-slate-300">Watermark:</span>
+                <span className="text-cyan-400 font-extrabold underline decoration-dotted">
+                  {effectiveWatermark === 'full-stack' ? 'FULL-STACK' : effectiveWatermark === 'prominent' ? 'FULL-STACK (High Glow)' : 'Stealth'}
+                </span>
+              </button>
+
+              {/* Changing 0s and 1s indicator */}
+              <div className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-semibold bg-emerald-950/40 text-emerald-400/90 border border-emerald-500/25">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                <span>0s ↔ 1s Dynamic Bits</span>
+              </div>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">
               Programming Languages & Cloud Technologies

@@ -56,6 +56,30 @@ html.light .bg-slate-800\/40 {
   background-color: #f1f5f9 !important;
 }
 
+/* Ensure Cyberspace Matrix / 3D Vortex Zone Stays Deep Dark & Vibrant in All Themes */
+html.light #vortex-continuous-zone,
+html.light .cyber-matrix-zone {
+  background-color: #020617 !important;
+  color: #f8fafc !important;
+}
+
+html.light #vortex-continuous-zone .text-white,
+html.light #vortex-continuous-zone .text-slate-100 {
+  color: #f8fafc !important;
+}
+
+html.light #vortex-continuous-zone .text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+html.light #vortex-continuous-zone .bg-slate-900\/85,
+html.light #vortex-continuous-zone .bg-slate-900\/90,
+html.light #vortex-continuous-zone .bg-slate-900 {
+  background-color: rgba(15, 23, 42, 0.9) !important;
+  border-color: rgba(30, 41, 59, 0.8) !important;
+  color: #f8fafc !important;
+}
+
 /* Borders in Light Theme (High-Contrast Crisp Definition) */
 html.light .border-slate-800,
 html.light .border-slate-800\/90,

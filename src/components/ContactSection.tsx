@@ -108,10 +108,13 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
                 <div className="relative shrink-0">
                   <div className="w-16 h-16 rounded-full p-0.5 bg-gradient-to-r from-cyan-500 to-blue-600 shadow-md">
                     <img
-                      src={profile.avatarUrl || "/dennis_avatar.png"}
+                      src={profile.avatarUrl || "/dennis_photo.png"}
                       alt={profile.name}
                       referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover rounded-full"
+                      className="w-full h-full object-cover object-top rounded-full"
+                      onError={(e) => {
+                        e.currentTarget.src = "/dennis_photo.png";
+                      }}
                     />
                   </div>
                 </div>

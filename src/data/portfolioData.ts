@@ -4,7 +4,7 @@ import dennisExactPhoto from '../assets/images/dennis_photo.jpg';
 export const initialProfile: UserProfile = {
   name: "Dennis Opiyo",
   title: "Software & Cloud Engineering Student",
-  avatarUrl: dennisExactPhoto,
+  avatarUrl: "/dennis_photo.png",
   university: "Masinde Muliro University of Science and Technology (MMUST)",
   degree: "BSc in Computer Science",
   location: "Kakamega / Nairobi, Kenya",

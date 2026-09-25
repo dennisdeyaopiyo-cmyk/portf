@@ -95,7 +95,7 @@ export const PortfolioCustomizer: React.FC<PortfolioCustomizerProps> = ({
                 type="text"
                 value={formData.avatarUrl || ''}
                 onChange={(e) => setFormData({ ...formData, avatarUrl: e.target.value })}
-                placeholder="/dennis_avatar.png"
+                placeholder="/dennis_photo.png"
                 className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 focus:outline-none focus:border-cyan-500"
               />
             </div>
