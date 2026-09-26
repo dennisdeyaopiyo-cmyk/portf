@@ -116,3 +116,28 @@ export interface ChatMessage {
   text: string;
   timestamp: string;
 }
+
+export interface ContactMessage {
+  id: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  createdAt: string;
+  status?: 'unread' | 'read' | 'archived';
+}
+
+export interface PortfolioVisit {
+  id: string;
+  visitedAt: string;
+  deviceType: string;
+  browser: string;
+  operatingSystem: string;
+  screenResolution: string;
+  language: string;
+  referrer: string;
+  timezone: string;
+  path: string;
+  sessionId?: string;
+}
+

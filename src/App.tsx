@@ -11,9 +11,10 @@ import { AiAssistantWidget } from './components/AiAssistantWidget';
 import { FloatingAiButton } from './components/FloatingAiButton';
 import { ProjectModal } from './components/ProjectModal';
 import { PhotoModal } from './components/PhotoModal';
-import { PortfolioCustomizer } from './components/PortfolioCustomizer';
+import { AdminDashboard } from './components/AdminDashboard';
 import { Footer } from './components/Footer';
 import { BinaryVortexCanvas, VortexDensity } from './components/BinaryVortexCanvas';
+import { subscribeToTestimonials, submitTestimonialToFirestore, recordPortfolioVisit } from './services/firebaseService';
 
 import { 
   initialProfile, 
@@ -49,25 +50,42 @@ export default function App() {
   const [education] = useState(initialEducation);
   const [experience] = useState(initialExperience);
   const [certifications] = useState(initialCertifications);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>(() => {
-    const saved = localStorage.getItem('mmust_portfolio_testimonials');
-    return saved ? JSON.parse(saved) : initialTestimonials;
-  });
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(initialTestimonials);
+  const [adminDashboardOpen, setAdminDashboardOpen] = useState(false);
 
-  const handleAddTestimonial = (newTestimonial: Omit<Testimonial, 'id'>) => {
+  // Subscribe to live Firebase Firestore testimonials
+  useEffect(() => {
+    const unsubscribe = subscribeToTestimonials(
+      (cloudTestimonials) => {
+        setTestimonials(cloudTestimonials);
+      },
+      initialTestimonials
+    );
+
+    // Record visitor telemetry to Cloud Firestore
+    recordPortfolioVisit();
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleAddTestimonial = async (newTestimonial: Omit<Testimonial, 'id'>) => {
     const item: Testimonial = {
       ...newTestimonial,
       id: `test-${Date.now()}`,
     };
-    const updated = [item, ...testimonials];
-    setTestimonials(updated);
-    localStorage.setItem('mmust_portfolio_testimonials', JSON.stringify(updated));
+    setTestimonials((prev) => [item, ...prev]);
+
+    // Persist to Cloud Firestore
+    try {
+      await submitTestimonialToFirestore(newTestimonial);
+    } catch (e) {
+      console.warn('Could not save testimonial to cloud Firestore:', e);
+    }
   };
 
   const [activeSection, setActiveSection] = useState('about');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [aiChatOpen, setAiChatOpen] = useState(false);
-  const [customizerOpen, setCustomizerOpen] = useState(false);
   const [photoModalOpen, setPhotoModalOpen] = useState(false);
 
   // 3D Rotating Binary Vortex Tunnel State (starts at Skills, ends at Projects)
@@ -195,7 +213,7 @@ ${experience.map((e) => `- ${e.title} @ ${e.companyOrOrg} (${e.startDate} - ${e.
         theme={theme}
         onToggleTheme={handleToggleTheme}
         onNavigate={handleNavigate}
-        onOpenCustomizer={() => setCustomizerOpen(true)}
+        onOpenAdmin={() => setAdminDashboardOpen(true)}
         onDownloadCv={handleDownloadCv}
       />
 
@@ -272,6 +290,18 @@ ${experience.map((e) => `- ${e.title} @ ${e.companyOrOrg} (${e.startDate} - ${e.
       <Footer
         profile={profile}
         onScrollToTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onOpenAdmin={() => setAdminDashboardOpen(true)}
+      />
+
+      {/* Firebase Cloud Admin Dashboard */}
+      <AdminDashboard
+        isOpen={adminDashboardOpen}
+        onClose={() => setAdminDashboardOpen(false)}
+        testimonials={testimonials}
+        projects={projects}
+        profile={profile}
+        onUpdateProfile={(updated) => setProfile(updated)}
+        onResetData={handleResetData}
       />
 
       {/* Floating AI Button & Modal (Only Floating AI on Screen) */}
@@ -297,15 +327,6 @@ ${experience.map((e) => `- ${e.title} @ ${e.companyOrOrg} (${e.startDate} - ${e.
         isOpen={photoModalOpen}
         onClose={() => setPhotoModalOpen(false)}
         profile={profile}
-      />
-
-      {/* Portfolio Profile Customizer Drawer */}
-      <PortfolioCustomizer
-        isOpen={customizerOpen}
-        onClose={() => setCustomizerOpen(false)}
-        profile={profile}
-        onUpdateProfile={(updated) => setProfile(updated)}
-        onResetData={handleResetData}
       />
 
     </div>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   Code2, 
   Bot, 
-  SlidersHorizontal, 
+  ShieldCheck, 
   Menu, 
   X, 
   GraduationCap, 
@@ -20,7 +20,7 @@ interface NavbarProps {
   theme: 'dark' | 'light';
   onToggleTheme: () => void;
   onNavigate: (sectionId: string) => void;
-  onOpenCustomizer: () => void;
+  onOpenAdmin: () => void;
   onDownloadCv: () => void;
 }
 
@@ -30,7 +30,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   theme,
   onToggleTheme,
   onNavigate,
-  onOpenCustomizer,
+  onOpenAdmin,
   onDownloadCv,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -136,11 +136,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
 
           <button
-            onClick={onOpenCustomizer}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 border border-transparent hover:border-slate-700 transition-all"
-            title="Customize Portfolio Profile & Data"
+            onClick={onOpenAdmin}
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 transition-all shadow-sm"
+            title="Admin Portal (Password: Dennis@2005)"
           >
-            <SlidersHorizontal className="w-4 h-4" />
+            <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Admin</span>
           </button>
         </div>
 
@@ -217,13 +218,13 @@ export const Navbar: React.FC<NavbarProps> = ({
 
               <button
                 onClick={() => {
-                  onOpenCustomizer();
+                  onOpenAdmin();
                   setMobileMenuOpen(false);
                 }}
-                className="flex items-center justify-center space-x-1.5 px-3 py-2 rounded-lg text-xs font-medium bg-slate-800 text-slate-200 border border-slate-700"
+                className="flex items-center justify-center space-x-1.5 px-3 py-2 rounded-lg text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/30"
               >
-                <SlidersHorizontal className="w-3.5 h-3.5" />
-                <span>Customize Data</span>
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>Admin Portal</span>
               </button>
             </div>
           </div>

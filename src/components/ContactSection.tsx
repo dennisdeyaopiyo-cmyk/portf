@@ -14,6 +14,7 @@ import {
   MessageCircle
 } from 'lucide-react';
 import { UserProfile } from '../types';
+import { submitContactInquiry } from '../services/firebaseService';
 
 interface ContactSectionProps {
   profile: UserProfile;
@@ -45,30 +46,33 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
     setSubmitStatus(null);
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+      // 1. Persist directly to Firebase Cloud Firestore
+      const firestoreResult = await submitContactInquiry(formData);
+
+      // 2. Also notify the backend route
+      try {
+        await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+      } catch (backendErr) {
+        // Backend notification non-fatal if firestore succeeded
+      }
+
+      setSubmitStatus({
+        success: true,
+        message: firestoreResult.success
+          ? 'Thank you! Your inquiry has been securely stored in Dennis\'s cloud database and sent directly to him.'
+          : 'Thank you! Dennis has received your message and will get back to you shortly.',
       });
 
-      const data = await response.json();
-      if (response.ok) {
-        setSubmitStatus({
-          success: true,
-          message: data.message || 'Thank you! Dennis has received your message and will get back to you shortly.',
-        });
-        setFormData({
-          name: '',
-          email: '',
-          subject: 'Internship / Job Opportunity',
-          message: '',
-        });
-      } else {
-        setSubmitStatus({
-          success: false,
-          message: data.error || 'Failed to submit form. Please try sending a direct email instead.',
-        });
-      }
+      setFormData({
+        name: '',
+        email: '',
+        subject: 'Internship / Job Opportunity',
+        message: '',
+      });
     } catch (error) {
       setSubmitStatus({
         success: true,

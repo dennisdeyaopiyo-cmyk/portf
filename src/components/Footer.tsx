@@ -1,13 +1,14 @@
 import React from 'react';
-import { ArrowUp, Code2, GraduationCap, Github, Linkedin, Mail, Heart, MessageCircle } from 'lucide-react';
+import { ArrowUp, Code2, GraduationCap, Github, Linkedin, Mail, Heart, MessageCircle, ShieldCheck } from 'lucide-react';
 import { UserProfile } from '../types';
 
 interface FooterProps {
   profile: UserProfile;
   onScrollToTop: () => void;
+  onOpenAdmin?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ profile, onScrollToTop }) => {
+export const Footer: React.FC<FooterProps> = ({ profile, onScrollToTop, onOpenAdmin }) => {
   return (
     <footer className="bg-slate-950 border-t border-slate-800/80 py-12 relative text-slate-400">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -80,9 +81,21 @@ export const Footer: React.FC<FooterProps> = ({ profile, onScrollToTop }) => {
 
         <div className="mt-8 pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-600 gap-2">
           <p>© {new Date().getFullYear()} {profile.name}. All rights reserved.</p>
-          <p className="flex items-center space-x-1">
-            <span>Built with React 19, TypeScript, Express & GCP</span>
-          </p>
+          <div className="flex items-center space-x-4">
+            <span className="flex items-center space-x-1">
+              <span>Built with React 19, TypeScript, Firebase & GCP</span>
+            </span>
+            {onOpenAdmin && (
+              <button
+                onClick={onOpenAdmin}
+                className="flex items-center space-x-1 text-slate-500 hover:text-cyan-400 transition-colors"
+                title="Open Firebase Admin Dashboard"
+              >
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>Admin Portal</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </footer>

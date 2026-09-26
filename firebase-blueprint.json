@@ -1,0 +1,176 @@
+{
+  "entities": {
+    "PortfolioVisit": {
+      "title": "PortfolioVisit",
+      "description": "Log of visitors who viewed Dennis's portfolio",
+      "type": "object",
+      "properties": {
+        "visitedAt": {
+          "type": "string"
+        },
+        "deviceType": {
+          "type": "string"
+        },
+        "browser": {
+          "type": "string"
+        },
+        "operatingSystem": {
+          "type": "string"
+        },
+        "screenResolution": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "referrer": {
+          "type": "string"
+        },
+        "timezone": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "sessionId": {
+          "type": "string"
+        }
+      },
+      "required": ["visitedAt", "deviceType", "browser"]
+    },
+    "ContactMessage": {
+      "title": "ContactMessage",
+      "description": "Inquiries submitted by recruiters, clients, and visitors",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100
+        },
+        "email": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 120
+        },
+        "subject": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 200
+        },
+        "message": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 3000
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["unread", "read", "archived"]
+        }
+      },
+      "required": ["name", "email", "subject", "message", "createdAt"]
+    },
+    "Testimonial": {
+      "title": "Testimonial",
+      "description": "Peer endorsements, recommendations, and visitor testimonials",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100
+        },
+        "role": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100
+        },
+        "company": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100
+        },
+        "content": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 1500
+        },
+        "rating": {
+          "type": "number"
+        },
+        "avatar": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "status": {
+          "type": "string",
+          "enum": ["approved", "pending"]
+        },
+        "createdAt": {
+          "type": "string"
+        }
+      },
+      "required": ["name", "role", "company", "content", "rating", "createdAt"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "Portfolio project item that can be managed by the administrator",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 150
+        },
+        "tagline": {
+          "type": "string",
+          "maxLength": 250
+        },
+        "category": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string",
+          "maxLength": 3000
+        },
+        "tags": {
+          "type": "array"
+        },
+        "featured": {
+          "type": "boolean"
+        },
+        "githubUrl": {
+          "type": "string"
+        },
+        "liveUrl": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        }
+      },
+      "required": ["title", "category", "summary"]
+    }
+  },
+  "firestore": {
+    "/portfolio_visits/{visitId}": {
+      "schema": "PortfolioVisit",
+      "description": "Telemetry and timestamps of visitors viewing Dennis's portfolio"
+    },
+    "/contact_messages/{messageId}": {
+      "schema": "ContactMessage",
+      "description": "Collection of contact inquiries from visitors and recruiters"
+    },
+    "/testimonials/{testimonialId}": {
+      "schema": "Testimonial",
+      "description": "Public peer endorsements and testimonials"
+    },
+    "/portfolio_projects/{projectId}": {
+      "schema": "Project",
+      "description": "Portfolio projects managed by Dennis"
+    }
+  }
+}
