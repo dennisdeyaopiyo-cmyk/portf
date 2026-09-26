@@ -195,7 +195,6 @@ ${experience.map((e) => `- ${e.title} @ ${e.companyOrOrg} (${e.startDate} - ${e.
         theme={theme}
         onToggleTheme={handleToggleTheme}
         onNavigate={handleNavigate}
-        onOpenAiChat={() => setAiChatOpen(true)}
         onOpenCustomizer={() => setCustomizerOpen(true)}
         onDownloadCv={handleDownloadCv}
       />
@@ -208,8 +207,6 @@ ${experience.map((e) => `- ${e.title} @ ${e.companyOrOrg} (${e.startDate} - ${e.
           profile={profile}
           onExploreProjects={() => handleNavigate('projects')}
           onContactClick={() => handleNavigate('contact')}
-          onOpenAiChat={() => setAiChatOpen(true)}
-          isAiChatOpen={aiChatOpen}
           onPhotoClick={() => setPhotoModalOpen(true)}
         />
 
@@ -277,13 +274,12 @@ ${experience.map((e) => `- ${e.title} @ ${e.companyOrOrg} (${e.startDate} - ${e.
         onScrollToTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
       />
 
-      {/* Always Visible Floating AI Twin Trigger Pill */}
+      {/* Floating AI Button & Modal (Only Floating AI on Screen) */}
       <FloatingAiButton
         isOpen={aiChatOpen}
         onClick={() => setAiChatOpen(true)}
       />
 
-      {/* Floating AI Twin Recruiter Assistant Widget */}
       <AiAssistantWidget
         isOpen={aiChatOpen}
         onClose={() => setAiChatOpen(false)}

@@ -304,6 +304,7 @@ export const AiAssistantWidget: React.FC<AiAssistantWidgetProps> = ({
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
+        cache: 'no-store',
         credentials: 'same-origin',
         body: JSON.stringify({
           message: text,
@@ -321,7 +322,8 @@ export const AiAssistantWidget: React.FC<AiAssistantWidgetProps> = ({
       }
 
       const data = await response.json();
-      const assistantReply = (data && data.reply) ? data.reply : getLocalPortfolioAnswer(text, profile);
+      const rawReply = (data && (data.reply || data.text)) ? (data.reply || data.text) : null;
+      const assistantReply = rawReply || getLocalPortfolioAnswer(text, profile);
 
       const botMsg: ChatMessage = {
         id: (Date.now() + 1).toString(),

@@ -20,7 +20,6 @@ interface NavbarProps {
   theme: 'dark' | 'light';
   onToggleTheme: () => void;
   onNavigate: (sectionId: string) => void;
-  onOpenAiChat: () => void;
   onOpenCustomizer: () => void;
   onDownloadCv: () => void;
 }
@@ -31,7 +30,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   theme,
   onToggleTheme,
   onNavigate,
-  onOpenAiChat,
   onOpenCustomizer,
   onDownloadCv,
 }) => {
@@ -130,15 +128,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
 
           <button
-            onClick={onOpenAiChat}
-            className="hidden lg:flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-cyan-500/20 to-blue-500/20 hover:from-cyan-500/30 hover:to-blue-500/30 text-cyan-300 border border-cyan-500/30 transition-all shadow-sm"
-            title="Ask Dennis's AI Twin questions about his experience"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-            <span>Ask AI Assistant</span>
-          </button>
-
-          <button
             onClick={onDownloadCv}
             className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors"
           >
@@ -168,14 +157,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             ) : (
               <Moon className="w-4 h-4 text-cyan-600" />
             )}
-          </button>
-
-          <button
-            onClick={onOpenAiChat}
-            className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/30"
-            title="Ask AI Assistant"
-          >
-            <Bot className="w-4 h-4" />
           </button>
           
           <button
@@ -220,17 +201,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <span>{theme === 'dark' ? 'Switch to High-Contrast Light' : 'Switch to Dark Mode'}</span>
               </div>
               <span className="text-xs text-slate-400 font-mono uppercase">{theme}</span>
-            </button>
-
-            <button
-              onClick={() => {
-                onOpenAiChat();
-                setMobileMenuOpen(false);
-              }}
-              className="w-full flex items-center justify-center space-x-2 px-4 py-2 rounded-lg text-sm font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
-            >
-              <Sparkles className="w-4 h-4 text-cyan-400" />
-              <span>Ask AI Recruiter Assistant</span>
             </button>
 
             <div className="grid grid-cols-2 gap-2">

@@ -24,8 +24,6 @@ interface HeroProps {
   profile: UserProfile;
   onExploreProjects: () => void;
   onContactClick: () => void;
-  onOpenAiChat: () => void;
-  isAiChatOpen?: boolean;
   onPhotoClick?: () => void;
 }
 
@@ -33,8 +31,6 @@ export const Hero: React.FC<HeroProps> = ({
   profile,
   onExploreProjects,
   onContactClick,
-  onOpenAiChat,
-  isAiChatOpen = false,
   onPhotoClick,
 }) => {
   const [rightPanelTab, setRightPanelTab] = useState<'portrait' | 'shell'>('portrait');
@@ -147,26 +143,6 @@ export const Hero: React.FC<HeroProps> = ({
                 >
                   <Mail className="w-4 h-4 text-slate-400" />
                   <span>Contact Me</span>
-                </button>
-              </div>
-
-              {/* Second Row: ASK AI ASSISTANT button directly below View My Projects */}
-              <div className="pt-1 flex items-center">
-                <button
-                  onClick={onOpenAiChat}
-                  className="px-6 py-3 rounded-full bg-slate-900/90 hover:bg-slate-900 border-2 border-cyan-400 text-cyan-300 font-bold shadow-[0_0_20px_rgba(6,182,212,0.35)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] hover:scale-105 active:scale-95 transition-all flex items-center space-x-3 cursor-pointer group"
-                  title="Ask Dennis's AI Assistant"
-                >
-                  <div className="relative shrink-0 w-5 h-5 flex items-center justify-center text-cyan-400">
-                    <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-                  </div>
-                  <span className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-white">
-                    Ask Dennis AI
-                  </span>
-                  <span className="flex h-2 w-2 relative">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-                  </span>
                 </button>
               </div>
             </div>
