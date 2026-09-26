@@ -24,53 +24,186 @@ interface AiAssistantWidgetProps {
 
 // Client-side fallback knowledge responder for offline / static hosting scenarios
 const getLocalPortfolioAnswer = (query: string, profile: UserProfile): string => {
-  const q = query.toLowerCase();
+  const q = query.trim().toLowerCase();
 
-  if (q.includes('skill') || q.includes('stack') || q.includes('technolog') || q.includes('language') || q.includes('python') || q.includes('cloud')) {
+  // Natural Greetings
+  if (
+    /^(hi|hello|hey|howdy|sup|yo|greetings|good\s*(morning|afternoon|evening)|hi\s*there|habari|jambo)\b/i.test(q) ||
+    q === 'hi' ||
+    q === 'hello' ||
+    q === 'hey'
+  ) {
+    return `Hello there! 👋 Great to meet you! How are you doing today?
+
+I'm Dennis Opiyo's AI Portfolio Assistant, running live with Google Gemini. I'm ready to chat and answer any questions you have about Dennis!
+
+Feel free to ask me anything, such as:
+- ☁️ **Cloud & DevOps**: How Dennis uses GCP (Cloud Run), AWS, Docker, Kubernetes, and Terraform.
+- 💻 **Code & Languages**: His projects in Python, Go, TypeScript/React, and Java.
+- 🚀 **Flagship Projects**: The MMUST Campus Cloud Sync portal, Multi-Cloud CLI, or Task Queue.
+- 🎓 **Academics & Leadership**: His role as Developer Student Club Tech Lead at Masinde Muliro University.
+
+What would you like to know?`;
+  }
+
+  // Conversational "how are you"
+  if (
+    q.includes('how are you') ||
+    q.includes('how do you do') ||
+    q.includes('how is it going') ||
+    q.includes('how are things') ||
+    q.includes('whats up') ||
+    q.includes("what's up")
+  ) {
+    return `I'm doing great, thank you for asking! 😊 
+
+How are you doing today? What brings you to Dennis's software & cloud engineering portfolio? Whether you're a recruiter, engineer, student, or just curious, I'm here to answer any questions about his skills, projects, or background!`;
+  }
+
+  // "Who are you" / "What is your name"
+  if (
+    q.includes('who are you') ||
+    q.includes('what are you') ||
+    q.includes('your name') ||
+    q.includes('introduce yourself')
+  ) {
+    return `I'm **Dennis Opiyo's AI Portfolio Assistant**! 🤖
+
+I act as Dennis's interactive conversational twin. I'm powered by Google Gemini and trained on Dennis's complete technical background as a Software & Cloud Engineering student at **Masinde Muliro University of Science and Technology (MMUST)**.
+
+I can answer any technical questions about his cloud architectures, explain his code and microservices, or discuss his experience in Docker, GCP, AWS, and Python!`;
+  }
+
+  // Docker / Containers / Kubernetes / Cloud / DevOps
+  if (
+    q.includes('docker') ||
+    q.includes('container') ||
+    q.includes('kubernetes') ||
+    q.includes('k8s') ||
+    q.includes('devops') ||
+    q.includes('terraform') ||
+    q.includes('ci/cd') ||
+    q.includes('pipeline')
+  ) {
+    return `### 🐳 Dennis's Cloud & DevOps Engineering:
+Dennis focuses heavily on modern containerization, infrastructure-as-code, and cloud platforms:
+- **Docker & Microservices**: Crafts multi-stage Docker builds with Alpine/Distroless bases to produce minimal, secure container images under 30MB.
+- **Kubernetes (K8s)**: Configures deployments, service discovery, ingress, and horizontal pod autoscalers for distributed apps.
+- **Terraform (IaC)**: Built multi-cloud automation scripts provisioning AWS (EC2/S3) and GCP (Cloud Run/Storage) infrastructure.
+- **Google Cloud Platform (GCP)**: Deploys serverless containers on **Cloud Run**, manages object storage with **GCS**, and implements IAM least-privilege security.
+- **Amazon Web Services (AWS)**: Configures EC2 instances, S3 lifecycle rules, Lambda functions, and CloudWatch log metrics.
+- **CI/CD**: Automates testing, linting, Docker image pushes to GCP Artifact Registry, and zero-downtime deployment pipelines using GitHub Actions.`;
+  }
+
+  // Skills & Languages
+  if (
+    q.includes('skill') ||
+    q.includes('stack') ||
+    q.includes('technolog') ||
+    q.includes('language') ||
+    q.includes('python') ||
+    q.includes('golang') ||
+    q.includes('go') ||
+    q.includes('typescript') ||
+    q.includes('javascript') ||
+    q.includes('java') ||
+    q.includes('sql')
+  ) {
     return `### 🛠️ Dennis Opiyo's Core Tech Stack:
-- **Cloud & DevOps**: Google Cloud Platform (Cloud Run, GCS, IAM), AWS (EC2, S3, Lambda), Docker, Kubernetes, Terraform, GitHub Actions CI/CD.
-- **Programming Languages**: **Python** (Expert in FastAPI/Django), **TypeScript/JavaScript** (React, Node.js), **Go** (Microservices), **Java** (Spring Boot), **SQL** (PostgreSQL/MySQL), and **C++**.
-- **Databases & Systems**: PostgreSQL, Redis, Firebase, Linux (Ubuntu/Debian), Nginx.`;
+- **Programming Languages**:
+  - **Python** (Expert): FastAPI, Django REST, Asyncio, Pandas, microservices.
+  - **TypeScript / JavaScript** (Advanced): React, Node.js, Express, Tailwind CSS, Vite.
+  - **Go / Golang** (Intermediate): Concurrent microservices, Gin framework, high-throughput APIs.
+  - **Java** (Proficient): Object-oriented architecture, Spring Boot, data structures.
+  - **SQL & Databases**: PostgreSQL schema design, Redis in-memory caching, Firebase.
+- **Cloud & Infrastructure**:
+  - GCP (Cloud Run, Compute Engine, Storage), AWS (EC2, S3, Lambda), Docker, Kubernetes, Terraform, Linux administration (Ubuntu/Debian), Nginx.`;
   }
 
-  if (q.includes('project') || q.includes('portfolio') || q.includes('work') || q.includes('built') || q.includes('sync')) {
+  // Projects
+  if (
+    q.includes('project') ||
+    q.includes('portfolio') ||
+    q.includes('work') ||
+    q.includes('built') ||
+    q.includes('sync') ||
+    q.includes('queue') ||
+    q.includes('provisioner')
+  ) {
     return `### 🚀 Featured Engineering Projects:
-1. **MMUST Campus Cloud Sync & Resource Portal**: Cloud-native document sharing & indexing system using Go, Docker, GCP Cloud Run, and React.
-2. **Multi-Cloud Infrastructure Provisioner**: CLI built in Python & Terraform automating AWS & GCP containerized clusters and storage buckets.
-3. **Distributed Task Queue & Monitoring Dashboard**: High-throughput task scheduling engine with TypeScript, Node.js, Redis, and Docker.
-4. **Agribusiness Market Intelligence & IoT Tracker**: Real-time sensor telemetry and yield prediction platform using Python, Django REST, and PostgreSQL.`;
+1. **MMUST Campus Cloud Sync & Resource Portal**:
+   - High-throughput campus document sync platform built with **Go (Golang)**, **Docker**, and deployed to **Google Cloud Run** with a **React** UI.
+2. **Multi-Cloud Infrastructure Provisioner**:
+   - Python CLI tool utilizing **Terraform** to automate cross-cloud deployment of AWS S3/EC2 and GCP Storage/Compute resources.
+3. **Real-Time Distributed Task Queue & Monitoring Dashboard**:
+   - Asynchronous worker queue processing background tasks with **TypeScript**, **Node.js**, **Redis**, and **Docker**.
+4. **Agribusiness Market Intelligence & IoT Tracker**:
+   - Regional crop telemetry and market pricing prediction platform using **Python**, **Django REST Framework**, and **PostgreSQL**.`;
   }
 
-  if (q.includes('mmust') || q.includes('school') || q.includes('university') || q.includes('education') || q.includes('degree')) {
+  // Education & MMUST
+  if (
+    q.includes('mmust') ||
+    q.includes('school') ||
+    q.includes('university') ||
+    q.includes('education') ||
+    q.includes('degree') ||
+    q.includes('course')
+  ) {
     return `### 🎓 Education & Campus Leadership:
-- **University**: Masinde Muliro University of Science and Technology (**MMUST**), Kakamega, Kenya.
-- **Degree**: Bachelor of Science in Computer Science / Information Technology (Class of 2026).
-- **Leadership**: Active Peer Mentor & Tech Lead at the MMUST Developer Student Club, leading hands-on workshops on Docker, Linux, and Cloud Deployments.`;
+- **Institution**: **Masinde Muliro University of Science and Technology (MMUST)**, Kakamega, Kenya.
+- **Degree**: Bachelor of Science in Computer Science / Information Technology (Expected 2027, First Class Honors standing).
+- **Leadership**: Tech Lead & Peer Mentor at the **MMUST Developer Student Club (DSC)**, organizing hands-on workshops on Linux administration, Docker containerization, and Cloud Native deployment.`;
   }
 
-  if (q.includes('hire') || q.includes('why') || q.includes('reason') || q.includes('job') || q.includes('intern') || q.includes('role')) {
-    return `### 💼 Why Hire Dennis?
-- **Cloud-Native Practical Rigor**: Hands-on proficiency building production microservices on GCP and AWS with Docker and Terraform.
-- **Strong Fundamentals**: Deep grounding in Computer Science, algorithms, relational schema design, and Linux systems.
-- **High Agency & Fast Learner**: Proven record building end-to-end applications from scratch and mentoring peers at MMUST.
-- **Open to Opportunities**: Actively seeking Cloud Engineer, DevOps, and Full-Stack Software Developer internships and entry-level positions!`;
+  // Hiring & Opportunities
+  if (
+    q.includes('hire') ||
+    q.includes('why') ||
+    q.includes('reason') ||
+    q.includes('job') ||
+    q.includes('intern') ||
+    q.includes('role') ||
+    q.includes('available')
+  ) {
+    return `### 💼 Why Hire Dennis Opiyo?
+- **Production-Ready Engineering**: Not just theoretical knowledge—Dennis builds and deploys actual containerized microservices on GCP and AWS.
+- **Strong Computer Science Core**: Grounded in algorithms, distributed systems principles, relational schema design, and Linux systems programming.
+- **Fast Learner & High Ownership**: From leading campus developer bootcamps to building multi-cloud CLI tools, Dennis takes initiative and delivers robust code.
+- **Actively Open to Opportunities**: Ready for Cloud Engineering, DevOps, and Full-Stack Software Developer internships and full-time positions!`;
   }
 
-  if (q.includes('contact') || q.includes('email') || q.includes('reach') || q.includes('github') || q.includes('linkedin') || q.includes('phone')) {
-    return `### 📬 Contact Information:
+  // Contact
+  if (
+    q.includes('contact') ||
+    q.includes('email') ||
+    q.includes('reach') ||
+    q.includes('github') ||
+    q.includes('linkedin') ||
+    q.includes('phone')
+  ) {
+    return `### 📬 Connect with Dennis:
 - **Email**: \`dennisdeyaopiyo@gmail.com\`
-- **Location**: Kakamega, Kenya (Masinde Muliro University)
-- **Profiles**: Connect via GitHub or LinkedIn using the social links in the navigation bar or footer!
-- Feel free to also send a direct message using the **Get In Touch** contact form on this page.`;
+- **Location**: Kakamega & Nairobi, Kenya
+- **LinkedIn & GitHub**: Links are directly accessible via the top navigation bar and footer.
+- **Contact Form**: You can also send him an instant message using the **Get In Touch** section below!`;
   }
 
-  return `Dennis Opiyo is a Software & Cloud Engineering student at **Masinde Muliro University of Science and Technology (MMUST)** specializing in **GCP, AWS, Docker, Kubernetes, Python, Go, and TypeScript**.
+  // Appreciation / Farewell
+  if (q.includes('thank') || q.includes('thanks') || q.includes('bye') || q.includes('goodbye') || q.includes('cool') || q.includes('awesome')) {
+    return `You're very welcome! 😊 It was a pleasure chatting with you. Feel free to explore Dennis's project demos or reach out to him directly at \`dennisdeyaopiyo@gmail.com\`! Have a wonderful day ahead! 🚀`;
+  }
 
-You can ask me about:
-- 🚀 **Projects**: MMUST Cloud Sync, Terraform Multi-Cloud CLI, Redis Task Queue.
-- ☁️ **Cloud Skills**: Google Cloud Run, AWS S3/EC2, Kubernetes, CI/CD.
-- 💻 **Languages**: Python, TypeScript, Go, Java, PostgreSQL.
-- 🎓 **Education**: MMUST Computer Science coursework & leadership.`;
+  // Thoughtful Contextual Fallback
+  return `That's a great question! Regarding "${query}":
+
+Dennis is a Software & Cloud Engineering student at **Masinde Muliro University of Science and Technology (MMUST)** specializing in **GCP, AWS, Docker, Kubernetes, Python, Go, and TypeScript**.
+
+You can ask me anything specific, such as:
+- 🛠️ Dennis's technical experience with specific tools (e.g. *Docker, Terraform, FastAPI, Cloud Run*)
+- 🚀 Deep dives into his projects (*MMUST Cloud Sync, Task Queue, IoT Tracker*)
+- 🎓 His academic coursework and leadership at MMUST
+- 💼 His availability for Cloud / DevOps / Software Engineering roles!`;
 };
 
 export const AiAssistantWidget: React.FC<AiAssistantWidgetProps> = ({
@@ -92,10 +225,11 @@ export const AiAssistantWidget: React.FC<AiAssistantWidgetProps> = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const suggestedQuestions = [
-    "What are Dennis's top cloud skills in GCP & AWS?",
-    "Tell me about Dennis's MMUST Campus Cloud project.",
+    "Hi! How are you doing today?",
+    "What are your top cloud skills in GCP & AWS?",
+    "Tell me about the MMUST Campus Cloud project.",
+    "How do you use Docker, Kubernetes & Go?",
     "Why hire Dennis for a Cloud or DevOps role?",
-    "What programming languages does Dennis know?",
   ];
 
   const scrollToBottom = () => {
