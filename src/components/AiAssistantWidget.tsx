@@ -74,6 +74,30 @@ I act as Dennis's interactive conversational twin. I'm powered by Google Gemini 
 I can answer any technical questions about his cloud architectures, explain his code and microservices, or discuss his experience in Docker, GCP, AWS, and Python!`;
   }
 
+  // "Is he good" / "How good is he" / Evaluation questions
+  if (
+    q.includes('is he good') ||
+    q.includes('how good is') ||
+    q.includes('is dennis good') ||
+    q.includes('is he skilled') ||
+    q.includes('can he code') ||
+    q.includes('how good') ||
+    q.includes('is he competent') ||
+    q.includes('is he talented') ||
+    q.includes('good engineer') ||
+    q.includes('good developer')
+  ) {
+    return `Yes, Dennis Opiyo is an **exceptionally capable, hardworking, and innovative Software & Cloud Engineer**! 🚀
+
+Here is what makes him so effective:
+- 💡 **Hands-on Cloud & DevOps Rigor**: He doesn't just write scripts; he builds production-ready architectures on **Google Cloud Platform (GCP)** and **AWS**, using **Docker** containers, **Kubernetes**, and **Terraform** for automation.
+- ⚡ **Strong Programming Foundations**: Highly proficient in **Python** (FastAPI, Django), **TypeScript/React**, and **Go** for high-concurrency microservices, with deep knowledge of algorithms and systems.
+- 🎓 **Leadership & Community Impact**: As the **Developer Student Club (DSC) Tech Lead & Peer Mentor** at Masinde Muliro University of Science and Technology (MMUST), he leads hands-on bootcamps teaching peers Linux, Git, and Cloud deployments.
+- 🛠️ **High Agency & Fast Execution**: Proven ability to take real problems—like campus resource distribution—and ship full-stack distributed systems that solve them.
+
+Would you like to examine his featured project architectures, or explore how he can contribute to your team?`;
+  }
+
   // Docker / Containers / Kubernetes / Cloud / DevOps
   if (
     q.includes('docker') ||
@@ -95,19 +119,18 @@ Dennis focuses heavily on modern containerization, infrastructure-as-code, and c
 - **CI/CD**: Automates testing, linting, Docker image pushes to GCP Artifact Registry, and zero-downtime deployment pipelines using GitHub Actions.`;
   }
 
-  // Skills & Languages
+  // Skills & Languages (use word boundary for short language names to prevent matching words like "good", "going", "google")
   if (
     q.includes('skill') ||
     q.includes('stack') ||
     q.includes('technolog') ||
     q.includes('language') ||
     q.includes('python') ||
-    q.includes('golang') ||
-    q.includes('go') ||
+    /\b(go|golang)\b/i.test(q) ||
     q.includes('typescript') ||
     q.includes('javascript') ||
-    q.includes('java') ||
-    q.includes('sql')
+    /\b(java)\b/i.test(q) ||
+    /\b(sql|postgres|postgresql)\b/i.test(q)
   ) {
     return `### 🛠️ Dennis Opiyo's Core Tech Stack:
 - **Programming Languages**:
@@ -277,7 +300,11 @@ export const AiAssistantWidget: React.FC<AiAssistantWidgetProps> = ({
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        credentials: 'same-origin',
         body: JSON.stringify({
           message: text,
           conversationHistory: messages.map(m => ({ sender: m.sender, text: m.text })),
@@ -286,6 +313,11 @@ export const AiAssistantWidget: React.FC<AiAssistantWidgetProps> = ({
 
       if (!response.ok) {
         throw new Error(`Server returned status: ${response.status}`);
+      }
+
+      const contentType = response.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        throw new Error('Received non-JSON response from server');
       }
 
       const data = await response.json();
