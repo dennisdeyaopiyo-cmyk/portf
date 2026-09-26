@@ -24,7 +24,7 @@ export const Footer: React.FC<FooterProps> = ({ profile, onScrollToTop, onOpenAd
             </div>
 
             <p className="text-xs text-slate-500 max-w-md">
-              Software & Cloud Systems Student at {profile.university}.
+              Software & Cloud Systems Engineer at {profile.university}.
             </p>
           </div>
 

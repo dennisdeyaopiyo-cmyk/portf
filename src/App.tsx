@@ -29,13 +29,15 @@ import { Project, UserProfile, Testimonial } from './types';
 
 export default function App() {
   const [profile, setProfile] = useState<UserProfile>(() => {
-    const saved = localStorage.getItem('mmust_portfolio_profile_v9');
+    const saved = localStorage.getItem('mmust_portfolio_profile_v10');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
+        const cleanedTitle = parsed.title?.replace(/\s*Student/gi, '').trim() || initialProfile.title;
         return {
           ...initialProfile,
           ...parsed,
+          title: cleanedTitle === 'Software & Cloud Engineering' ? 'Software & Cloud Engineer' : cleanedTitle,
           avatarUrl: parsed.avatarUrl || initialProfile.avatarUrl || "/dennis_photo.png",
         };
       } catch {
@@ -94,36 +96,18 @@ export default function App() {
   const [isRotating, setIsRotating] = useState<boolean>(true);
   const [watermarkStyle, setWatermarkStyle] = useState<'full-stack' | 'prominent' | 'stealth'>('full-stack');
 
-  // Theme Management (Dark vs High-Contrast Light with Accessibility Preference Detection)
-  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
-    const saved = localStorage.getItem('mmust_portfolio_theme');
-    if (saved === 'dark' || saved === 'light') return saved;
-    // Check OS preference
-    if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-      return 'light';
-    }
-    return 'dark';
-  });
-
+  // Enforce Permanent Cyberpunk Dark Mode
   useEffect(() => {
-    localStorage.setItem('mmust_portfolio_theme', theme);
+    localStorage.removeItem('mmust_portfolio_theme');
     const root = document.documentElement;
-    if (theme === 'light') {
-      root.classList.add('light');
-      root.setAttribute('data-theme', 'light');
-    } else {
-      root.classList.remove('light');
-      root.setAttribute('data-theme', 'dark');
-    }
-  }, [theme]);
-
-  const handleToggleTheme = () => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
-  };
+    root.classList.remove('light');
+    root.classList.add('dark');
+    root.setAttribute('data-theme', 'dark');
+  }, []);
 
   // Save profile changes locally
   useEffect(() => {
-    localStorage.setItem('mmust_portfolio_profile_v9', JSON.stringify(profile));
+    localStorage.setItem('mmust_portfolio_profile_v10', JSON.stringify(profile));
   }, [profile]);
 
   // Track active section on scroll
@@ -210,8 +194,6 @@ ${experience.map((e) => `- ${e.title} @ ${e.companyOrOrg} (${e.startDate} - ${e.
       <Navbar
         profile={profile}
         activeSection={activeSection}
-        theme={theme}
-        onToggleTheme={handleToggleTheme}
         onNavigate={handleNavigate}
         onOpenAdmin={() => setAdminDashboardOpen(true)}
         onDownloadCv={handleDownloadCv}

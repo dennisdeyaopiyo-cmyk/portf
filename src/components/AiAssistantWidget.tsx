@@ -69,7 +69,7 @@ How are you doing today? What brings you to Dennis's software & cloud engineerin
   ) {
     return `I'm **Dennis Opiyo's AI Portfolio Assistant**! 🤖
 
-I act as Dennis's interactive conversational twin. I'm powered by Google Gemini and trained on Dennis's complete technical background as a Software & Cloud Engineering student at **Masinde Muliro University of Science and Technology (MMUST)**.
+I act as Dennis's interactive conversational twin. I'm powered by Google Gemini and trained on Dennis's complete technical background as a Software & Cloud Engineer from **Masinde Muliro University of Science and Technology (MMUST)**.
 
 I can answer any technical questions about his cloud architectures, explain his code and microservices, or discuss his experience in Docker, GCP, AWS, and Python!`;
   }
@@ -220,7 +220,7 @@ Dennis focuses heavily on modern containerization, infrastructure-as-code, and c
   // Thoughtful Contextual Fallback
   return `That's a great question! Regarding "${query}":
 
-Dennis is a Software & Cloud Engineering student at **Masinde Muliro University of Science and Technology (MMUST)** specializing in **GCP, AWS, Docker, Kubernetes, Python, Go, and TypeScript**.
+Dennis is a Software & Cloud Engineer from **Masinde Muliro University of Science and Technology (MMUST)** specializing in **GCP, AWS, Docker, Kubernetes, Python, Go, and TypeScript**.
 
 You can ask me anything specific, such as:
 - 🛠️ Dennis's technical experience with specific tools (e.g. *Docker, Terraform, FastAPI, Cloud Run*)

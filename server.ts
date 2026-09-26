@@ -49,18 +49,18 @@ async function startServer() {
 
       const ai = getAiClient();
       if (!ai) {
-        const fallbackMsg = "Thanks for asking! I'm Dennis's AI assistant. (Note: GEMINI_API_KEY is not configured yet in environment secrets, but Dennis is a passionate Software & Cloud Engineering student at Masinde Muliro University skilled in Python, TypeScript, Go, Docker, AWS, GCP, and Kubernetes!).";
+        const fallbackMsg = "Thanks for asking! I'm Dennis's AI assistant. (Note: GEMINI_API_KEY is not configured yet in environment secrets, but Dennis is a passionate Software & Cloud Engineer from Masinde Muliro University skilled in Python, TypeScript, Go, Docker, AWS, GCP, and Kubernetes!).";
         return res.json({
           reply: fallbackMsg,
           text: fallbackMsg,
         });
       }
 
-      const PORTFOLIO_SYSTEM_INSTRUCTION = `You are the official AI Portfolio Assistant representing Dennis Opiyo, a Software & Cloud Engineering Student, Full-Stack Developer, and MMUST DSC Tech Lead. Your purpose is to interact with recruiters, developers, and visitors, giving concise, professional, and engaging information about Dennis.
+      const PORTFOLIO_SYSTEM_INSTRUCTION = `You are the official AI Portfolio Assistant representing Dennis Opiyo, a Software & Cloud Engineer, Full-Stack Developer, and MMUST DSC Tech Lead. Your purpose is to interact with recruiters, developers, and visitors, giving concise, professional, and engaging information about Dennis.
 
 <context>
 - FULL NAME: Dennis Opiyo (Dennis Deya Opiyo)
-- CURRENT ROLE / STATUS: Software & Cloud Engineering Student (BSc Computer Science / IT) | Tech Lead & Peer Mentor at Masinde Muliro University of Science and Technology (MMUST) Developer Student Club
+- CURRENT ROLE / STATUS: Software & Cloud Engineer (BSc Computer Science / IT) | Tech Lead & Peer Mentor at Masinde Muliro University of Science and Technology (MMUST) Developer Student Club
 - LOCATION: Kakamega & Nairobi, Kenya (Open to Remote & Global Relocation)
 - CORE SKILLS: 
   * Cloud & Infrastructure: Google Cloud Platform (Cloud Run, Compute Engine, Artifact Registry), Amazon Web Services (EC2, S3, Lambda), Docker, Docker Compose, Kubernetes, Terraform (IaC), CI/CD (GitHub Actions), Linux Administration, Redis, Nginx.

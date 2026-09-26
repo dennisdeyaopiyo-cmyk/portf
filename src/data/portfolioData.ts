@@ -3,13 +3,13 @@ import dennisExactPhoto from '../assets/images/dennis_photo.jpg';
 
 export const initialProfile: UserProfile = {
   name: "Dennis Opiyo",
-  title: "Software & Cloud Engineering Student",
+  title: "Software & Cloud Engineer",
   avatarUrl: "/dennis_photo.png",
   university: "Masinde Muliro University of Science and Technology (MMUST)",
   degree: "BSc in Computer Science",
   location: "Kakamega / Nairobi, Kenya",
-  bio: "Passionate CS student specializing in Cloud Infrastructure, Containerization, Microservices, and Full-Stack Development. Building resilient systems with Go, Python, TypeScript, Docker, and GCP.",
-  aboutLong: "I am a driven Computer Science student at Masinde Muliro University of Science and Technology (MMUST) with a passion for modern cloud architecture, containerized microservices, and high-performance software systems. My journey spans writing low-level system code in C++ & Go, building scalable Python/Django & TypeScript backends, and provisioning automated cloud infrastructure using Terraform, Docker, and Google Cloud Platform (GCP). On campus, I serve as a Peer Tech Lead helping fellow students master git workflows, Linux basics, and cloud deployment pipelines.",
+  bio: "Passionate Software & Cloud Engineer specializing in Cloud Infrastructure, Containerization, Microservices, and Full-Stack Development. Building resilient systems with Go, Python, TypeScript, Docker, and GCP.",
+  aboutLong: "I am a driven Software & Cloud Engineer from Masinde Muliro University of Science and Technology (MMUST) with a passion for modern cloud architecture, containerized microservices, and high-performance software systems. My journey spans writing low-level system code in C++ & Go, building scalable Python/Django & TypeScript backends, and provisioning automated cloud infrastructure using Terraform, Docker, and Google Cloud Platform (GCP). On campus, I serve as a Peer Tech Lead helping developers master git workflows, Linux basics, and cloud deployment pipelines.",
   email: "dennisdeyaopiyo@gmail.com",
   phone: "+254 768 339 258",
   whatsapp: "https://wa.me/254768339258",

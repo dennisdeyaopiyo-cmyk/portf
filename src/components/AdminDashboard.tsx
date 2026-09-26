@@ -370,7 +370,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <div className="relative">
                     <input
                       type={showPassword ? 'text' : 'password'}
-                      placeholder="Enter Admin Password (e.g. Dennis@2005)"
+                      placeholder="Enter password"
                       value={passwordInput}
                       onChange={(e) => {
                         setPasswordInput(e.target.value);

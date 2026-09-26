@@ -8,17 +8,13 @@ import {
   GraduationCap, 
   Send, 
   FileText,
-  Sparkles,
-  Sun,
-  Moon
+  Sparkles
 } from 'lucide-react';
 import { UserProfile } from '../types';
 
 interface NavbarProps {
   profile: UserProfile;
   activeSection: string;
-  theme: 'dark' | 'light';
-  onToggleTheme: () => void;
   onNavigate: (sectionId: string) => void;
   onOpenAdmin: () => void;
   onDownloadCv: () => void;
@@ -27,8 +23,6 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({
   profile,
   activeSection,
-  theme,
-  onToggleTheme,
   onNavigate,
   onOpenAdmin,
   onDownloadCv,
@@ -79,7 +73,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
             <div className="flex items-center text-xs text-slate-400">
               <GraduationCap className="w-3 h-3 mr-1 text-cyan-400" />
-              <span className="truncate max-w-[180px] sm:max-w-xs">MMUST Student</span>
+              <span className="truncate max-w-[180px] sm:max-w-xs">MMUST</span>
             </div>
           </div>
         </div>
@@ -104,29 +98,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           })}
         </nav>
 
-        {/* Action Buttons & Theme Toggle */}
+        {/* Action Buttons */}
         <div className="hidden md:flex items-center space-x-2">
-          {/* Accessible Theme Toggle Button */}
-          <button
-            id="theme-toggle-btn"
-            onClick={onToggleTheme}
-            aria-label={theme === 'dark' ? 'Switch to High-Contrast Light Theme' : 'Switch to Dark Theme'}
-            title={theme === 'dark' ? 'Switch to High-Contrast Light Theme' : 'Switch to Dark Theme'}
-            className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 transition-all cursor-pointer group"
-          >
-            {theme === 'dark' ? (
-              <>
-                <Sun className="w-4 h-4 text-amber-400 group-hover:rotate-45 transition-transform duration-300" />
-                <span className="text-[11px] font-medium hidden lg:inline">Light Mode</span>
-              </>
-            ) : (
-              <>
-                <Moon className="w-4 h-4 text-cyan-600 group-hover:-rotate-12 transition-transform duration-300" />
-                <span className="text-[11px] font-medium hidden lg:inline">Dark Mode</span>
-              </>
-            )}
-          </button>
-
           <button
             onClick={onDownloadCv}
             className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors"
@@ -145,21 +118,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
         </div>
 
-        {/* Mobile Navigation Toggle & Theme Switcher */}
+        {/* Mobile Navigation Toggle */}
         <div className="flex md:hidden items-center space-x-1.5">
-          {/* Mobile Theme Toggle Button */}
-          <button
-            onClick={onToggleTheme}
-            aria-label={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
-            className="p-2 rounded-lg bg-slate-800/90 text-slate-200 border border-slate-700"
-          >
-            {theme === 'dark' ? (
-              <Sun className="w-4 h-4 text-amber-400" />
-            ) : (
-              <Moon className="w-4 h-4 text-cyan-600" />
-            )}
-          </button>
-          
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 focus:outline-none"
@@ -190,20 +150,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           <div className="pt-3 border-t border-slate-800 flex flex-col space-y-2">
-            <button
-              onClick={() => {
-                onToggleTheme();
-                setMobileMenuOpen(false);
-              }}
-              className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-sm font-semibold bg-slate-800/80 text-slate-200 border border-slate-700"
-            >
-              <div className="flex items-center space-x-2">
-                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-cyan-600" />}
-                <span>{theme === 'dark' ? 'Switch to High-Contrast Light' : 'Switch to Dark Mode'}</span>
-              </div>
-              <span className="text-xs text-slate-400 font-mono uppercase">{theme}</span>
-            </button>
-
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => {
