@@ -33,7 +33,8 @@ import {
   Check,
   Calendar,
   Send,
-  Copy
+  Copy,
+  QrCode
 } from 'lucide-react';
 import { 
   ADMIN_EMAIL, 
@@ -61,6 +62,7 @@ interface AdminDashboardProps {
   profile: UserProfile;
   onUpdateProfile: (updatedProfile: UserProfile) => void;
   onResetData: () => void;
+  onOpenQrCode?: () => void;
 }
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({
@@ -71,6 +73,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   profile,
   onUpdateProfile,
   onResetData,
+  onOpenQrCode,
 }) => {
   // Authentication states
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
@@ -320,6 +323,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </div>
 
             <div className="flex items-center space-x-2">
+              {onOpenQrCode && (
+                <button
+                  onClick={onOpenQrCode}
+                  className="px-3 py-1.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-xs font-semibold text-cyan-400 border border-cyan-500/30 flex items-center space-x-1.5 transition-colors shadow-sm"
+                  title="Generate or Download Portfolio QR Code"
+                >
+                  <QrCode className="w-3.5 h-3.5" />
+                  <span>QR Code</span>
+                </button>
+              )}
               {isAuthenticated && (
                 <button
                   onClick={handleSignOut}

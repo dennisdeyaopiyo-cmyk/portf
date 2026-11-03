@@ -8,7 +8,8 @@ import {
   GraduationCap, 
   Send, 
   FileText,
-  Sparkles
+  Sparkles,
+  QrCode
 } from 'lucide-react';
 import { UserProfile } from '../types';
 
@@ -18,6 +19,7 @@ interface NavbarProps {
   onNavigate: (sectionId: string) => void;
   onOpenAdmin: () => void;
   onDownloadCv: () => void;
+  onOpenQrCode?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -26,6 +28,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onNavigate,
   onOpenAdmin,
   onDownloadCv,
+  onOpenQrCode,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -100,6 +103,17 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Action Buttons */}
         <div className="hidden md:flex items-center space-x-2">
+          {onOpenQrCode && (
+            <button
+              onClick={onOpenQrCode}
+              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800/90 hover:bg-slate-700 text-cyan-300 border border-slate-700/80 hover:border-cyan-500/40 transition-colors shadow-sm"
+              title="Get Portfolio QR Code"
+            >
+              <QrCode className="w-3.5 h-3.5 text-cyan-400" />
+              <span>QR Code</span>
+            </button>
+          )}
+
           <button
             onClick={onDownloadCv}
             className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors"
@@ -150,16 +164,29 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           <div className="pt-3 border-t border-slate-800 flex flex-col space-y-2">
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-3 gap-2">
+              {onOpenQrCode && (
+                <button
+                  onClick={() => {
+                    onOpenQrCode();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="flex items-center justify-center space-x-1 px-2 py-2 rounded-lg text-xs font-medium bg-slate-800/90 text-cyan-300 border border-slate-700"
+                >
+                  <QrCode className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>QR Code</span>
+                </button>
+              )}
+
               <button
                 onClick={() => {
                   onDownloadCv();
                   setMobileMenuOpen(false);
                 }}
-                className="flex items-center justify-center space-x-1.5 px-3 py-2 rounded-lg text-xs font-medium bg-slate-800 text-slate-200 border border-slate-700"
+                className="flex items-center justify-center space-x-1 px-2 py-2 rounded-lg text-xs font-medium bg-slate-800 text-slate-200 border border-slate-700"
               >
                 <FileText className="w-3.5 h-3.5" />
-                <span>Download CV</span>
+                <span>CV</span>
               </button>
 
               <button
@@ -167,10 +194,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onOpenAdmin();
                   setMobileMenuOpen(false);
                 }}
-                className="flex items-center justify-center space-x-1.5 px-3 py-2 rounded-lg text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/30"
+                className="flex items-center justify-center space-x-1 px-2 py-2 rounded-lg text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/30"
               >
                 <ShieldCheck className="w-3.5 h-3.5" />
-                <span>Admin Portal</span>
+                <span>Admin</span>
               </button>
             </div>
           </div>

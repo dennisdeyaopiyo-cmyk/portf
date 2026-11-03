@@ -13,6 +13,7 @@ import { ProjectModal } from './components/ProjectModal';
 import { PhotoModal } from './components/PhotoModal';
 import { AdminDashboard } from './components/AdminDashboard';
 import { Footer } from './components/Footer';
+import { QrCodeModal } from './components/QrCodeModal';
 import { BinaryVortexCanvas, VortexDensity } from './components/BinaryVortexCanvas';
 import { subscribeToTestimonials, submitTestimonialToFirestore, recordPortfolioVisit } from './services/firebaseService';
 
@@ -89,6 +90,7 @@ export default function App() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [aiChatOpen, setAiChatOpen] = useState(false);
   const [photoModalOpen, setPhotoModalOpen] = useState(false);
+  const [qrModalOpen, setQrModalOpen] = useState(false);
 
   // 3D Rotating Binary Vortex Tunnel State (starts at Skills, ends at Projects)
   const [vortexSpeed, setVortexSpeed] = useState<number>(1);
@@ -197,6 +199,7 @@ ${experience.map((e) => `- ${e.title} @ ${e.companyOrOrg} (${e.startDate} - ${e.
         onNavigate={handleNavigate}
         onOpenAdmin={() => setAdminDashboardOpen(true)}
         onDownloadCv={handleDownloadCv}
+        onOpenQrCode={() => setQrModalOpen(true)}
       />
 
       {/* Main Content Area */}
@@ -208,6 +211,7 @@ ${experience.map((e) => `- ${e.title} @ ${e.companyOrOrg} (${e.startDate} - ${e.
           onExploreProjects={() => handleNavigate('projects')}
           onContactClick={() => handleNavigate('contact')}
           onPhotoClick={() => setPhotoModalOpen(true)}
+          onOpenQrCode={() => setQrModalOpen(true)}
         />
 
         {/* Continuous 3D Rotating Binary Vortex & Dense Dropping Rain Zone: Starts at Programming Languages & Cloud Technologies, Ends at Projects */}
@@ -273,6 +277,7 @@ ${experience.map((e) => `- ${e.title} @ ${e.companyOrOrg} (${e.startDate} - ${e.
         profile={profile}
         onScrollToTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         onOpenAdmin={() => setAdminDashboardOpen(true)}
+        onOpenQrCode={() => setQrModalOpen(true)}
       />
 
       {/* Firebase Cloud Admin Dashboard */}
@@ -284,6 +289,7 @@ ${experience.map((e) => `- ${e.title} @ ${e.companyOrOrg} (${e.startDate} - ${e.
         profile={profile}
         onUpdateProfile={(updated) => setProfile(updated)}
         onResetData={handleResetData}
+        onOpenQrCode={() => setQrModalOpen(true)}
       />
 
       {/* Floating AI Button & Modal (Only Floating AI on Screen) */}
@@ -308,6 +314,13 @@ ${experience.map((e) => `- ${e.title} @ ${e.companyOrOrg} (${e.startDate} - ${e.
       <PhotoModal
         isOpen={photoModalOpen}
         onClose={() => setPhotoModalOpen(false)}
+        profile={profile}
+      />
+
+      {/* Portfolio QR Code Modal (Live Vercel / Sharing) */}
+      <QrCodeModal
+        isOpen={qrModalOpen}
+        onClose={() => setQrModalOpen(false)}
         profile={profile}
       />
 

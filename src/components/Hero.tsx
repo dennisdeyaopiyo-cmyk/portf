@@ -16,7 +16,8 @@ import {
   Layers,
   MessageCircle,
   User,
-  Maximize2
+  Maximize2,
+  QrCode
 } from 'lucide-react';
 import { UserProfile } from '../types';
 
@@ -25,6 +26,7 @@ interface HeroProps {
   onExploreProjects: () => void;
   onContactClick: () => void;
   onPhotoClick?: () => void;
+  onOpenQrCode?: () => void;
 }
 
 export const Hero: React.FC<HeroProps> = ({
@@ -32,6 +34,7 @@ export const Hero: React.FC<HeroProps> = ({
   onExploreProjects,
   onContactClick,
   onPhotoClick,
+  onOpenQrCode,
 }) => {
   const [rightPanelTab, setRightPanelTab] = useState<'portrait' | 'shell'>('portrait');
   return (
@@ -184,6 +187,16 @@ export const Hero: React.FC<HeroProps> = ({
               >
                 <Mail className="w-5 h-5" />
               </a>
+              {onOpenQrCode && (
+                <button
+                  onClick={onOpenQrCode}
+                  className="hover:text-cyan-400 text-cyan-400/80 transition-colors flex items-center space-x-1 cursor-pointer pl-1"
+                  title="Portfolio QR Code for Vercel / Sharing"
+                >
+                  <QrCode className="w-5 h-5" />
+                  <span className="text-[11px] font-mono font-semibold">QR</span>
+                </button>
+              )}
             </div>
           </div>
 
